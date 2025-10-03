@@ -3,6 +3,9 @@
 namespace TelegramBotEssentials\Settings\Services;
 
 use Illuminate\Support\Collection;
+use TelegramBotEssentials\Settings\DTOs\Setting;
+use TelegramBotEssentials\Settings\Enums\SettingType;
+use TelegramBotEssentials\Settings\Models\BotSetting;
 
 class Settings
 {
@@ -13,13 +16,43 @@ class Settings
         $this->settings = collect();
     }
 
-    public function addSetting()
+    public function addSetting(Setting $setting): void
     {
-
+        $this->settings->put($setting->key, $setting);
     }
 
     public function getSettings(): Collection
     {
         return $this->settings;
+    }
+
+    public function getSetting(string $key): Setting
+    {
+        return $this->settings->get($key);
+    }
+
+    public function get(string $key): mixed
+    {
+        $setting = $this->settings->get($key);
+        switch ($setting->type) {
+            case SettingType::CHECKBOX:
+                $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
+                    ->where('key', $key)->first();
+                return $botSetting ? boolval($botSetting->value) : ($setting->default ?? $key);
+        }
+        return $key;
+    }
+
+    public function set(string $key, mixed $data): mixed
+    {
+        $setting = $this->settings->get($key);
+        switch ($setting->type) {
+            case SettingType::CHECKBOX:
+                $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
+                    ->where('key', $key)->first()
+                    ->update(['value' => $data]);
+                return $botSetting ? boolval($botSetting->value) : ($setting->default ?? $key);
+        }
+        return $key;
     }
 }

@@ -5,13 +5,13 @@ namespace TelegramBotEssentials\Settings;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
 use TelegramBotEssentials\Essence\Exceptions\LogicException;
-use TelegramBotEssentials\Essence\Telegram\StateAnswers\StateAnswerBus;
+use TelegramBotEssentials\Settings\Services\Settings;
 
 class TbeSettingsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(StateAnswerBus::class, fn() => new StateAnswerBus());
+        $this->app->singleton(Settings::class, fn() => new Settings());
     }
 
     /**

@@ -6038,7 +6038,7 @@
             "dist": {
                 "type": "path",
                 "url": "../telegram-bot-essentials",
-                "reference": "9b2b5ce4123210ff5f554d5d2671eca6efdd9829"
+                "reference": "80a8fc0b1e09081e8f8d4af8df368cbb260b6ef7"
             },
             "require": {
                 "elyar/personal-laravel-helpers": "^0.0.2",

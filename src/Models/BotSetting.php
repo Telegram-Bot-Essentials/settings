@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 use TelegramBotEssentials\Essence\Models\Bot;
 
-class BotSettings extends Model
+class BotSetting extends Model
 {
     use BelongsToTenant;
+
+    protected $guarded = [];
 
     public function bot(): BelongsTo
     {
