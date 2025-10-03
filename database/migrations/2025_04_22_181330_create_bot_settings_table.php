@@ -13,10 +13,12 @@ return new class extends Migration {
     {
         Schema::create('bot_settings', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Bot::class)->unique()->constrained();
+            $table->foreignIdFor(Bot::class)->constrained();
             $table->string('key');
-            $table->string('value');
+            $table->text('value');
             $table->timestamps();
+
+            $table->unique(['bot_id', 'key']);
         });
     }
 

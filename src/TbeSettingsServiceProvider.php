@@ -1,19 +1,17 @@
 <?php
 
-namespace TelegramBotEssentials\UserWallet;
+namespace TelegramBotEssentials\Settings;
 
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
 use TelegramBotEssentials\Essence\Exceptions\LogicException;
-use TelegramBotEssentials\UserWallet\Telegram\CallbackQueries\Member\MyWalletQuery;
-use TelegramBotEssentials\UserWallet\Telegram\ReplyKeys\Member\MyWalletKey;
-use TelegramBotEssentials\UserWallet\Telegram\StateAnswers\Member\MyWalletAnswer;
+use TelegramBotEssentials\Essence\Telegram\StateAnswers\StateAnswerBus;
 
 class TbeSettingsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-
+        $this->app->singleton(StateAnswerBus::class, fn() => new StateAnswerBus());
     }
 
     /**
@@ -25,7 +23,7 @@ class TbeSettingsServiceProvider extends ServiceProvider
         $this->registerPublishing();
 
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'tbe-gateway-zibal');
+        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'tbe-settings');
 
         callbackQueryBus()->addCallbackQueries([
 
@@ -40,8 +38,8 @@ class TbeSettingsServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../lang' => resource_path('lang/vendor/tbe-gateway-zibal'),
-            ], 'tbe-gateway-zibal-translations');
+                __DIR__ . '/../lang' => resource_path('lang/vendor/tbe-settings'),
+            ], 'tbe-settings-translations');
         }
     }
 }
