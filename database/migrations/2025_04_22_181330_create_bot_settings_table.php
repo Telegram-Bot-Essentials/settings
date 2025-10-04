@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignIdFor(Bot::class)->constrained();
             $table->string('key');
-            $table->text('value');
+            $table->text('value')->nullable();
             $table->timestamps();
 
             $table->unique(['bot_id', 'key']);
