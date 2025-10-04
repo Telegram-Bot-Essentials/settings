@@ -6,6 +6,8 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
 use TelegramBotEssentials\Essence\Exceptions\LogicException;
 use TelegramBotEssentials\Settings\Services\Settings;
+use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Admin\BotSettingsQuery;
+use TelegramBotEssentials\Settings\Telegram\StateAnswers\Admin\BotSettingsAnswer;
 
 class TbeSettingsServiceProvider extends ServiceProvider
 {
@@ -26,11 +28,11 @@ class TbeSettingsServiceProvider extends ServiceProvider
         $this->loadTranslationsFrom(__DIR__ . '/../lang', 'tbe-settings');
 
         callbackQueryBus()->addCallbackQueries([
-
+            BotSettingsQuery::class
         ]);
 
         stateAnswerBus()->addStateAnswers([
-
+            BotSettingsAnswer::class
         ]);
     }
 
