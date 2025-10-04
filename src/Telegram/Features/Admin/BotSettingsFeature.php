@@ -2,8 +2,9 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\Features\Admin;
 
-use TelegramBotEssentials\Essence\Telegram\TelegramResponse;
+use Telegram\Bot\Keyboard\Button;
 use Telegram\Bot\Keyboard\Keyboard;
+use TelegramBotEssentials\Essence\Telegram\TelegramResponse;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 
@@ -21,17 +22,20 @@ class BotSettingsFeature
         $replyMarkup = Keyboard::make()
             ->inline();
 
-        if(settings()->getSettings()->isEmpty()){
+        if (settings()->getSettings()->isEmpty()) {
             return new TelegramResponse(
                 text: 'No settings found',
             );
         }
 
-        settings()->getSettings()->each(function($setting) use ($replyMarkup){
-            self::renderSetting($setting, $replyMarkup);
+        settings()->getSettings()->each(function ($setting) use (&$keys, $replyMarkup) {
+            $key = self::renderSetting($setting, $replyMarkup);
+            if ($key) {
+                $keys[] = $key;
+            }
         });
 
-        debugMessage(json_encode(settings()->getSettings(), JSON_PRETTY_PRINT));
+        addInlineKeysSmartSorted($replyMarkup, $keys, 3);
 
         return new TelegramResponse(
             text: $text,
@@ -40,65 +44,45 @@ class BotSettingsFeature
         );
     }
 
-    public static function renderSetting(Setting $setting, Keyboard $replyMarkup): void
+    public static function renderSetting(Setting $setting, Keyboard $replyMarkup): ?Button
     {
         switch ($setting->type) {
             case SettingType::CHECKBOX:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label . ' ' . (settings()->get($setting->key) ? '✅' : '❌'),
-                        'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label . ' ' . (settings()->get($setting->key) ? '✅' : '❌'),
+                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
-                break;
             case SettingType::TEXT:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label,
-                        'callback_data' => encodeCallback(self::$type, 'text', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label,
+                    'callback_data' => encodeCallback(self::$type, 'text', [$setting->key])
                 ]);
-                break;
             case SettingType::NUMBER:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label,
-                        'callback_data' => encodeCallback(self::$type, 'number', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label,
+                    'callback_data' => encodeCallback(self::$type, 'number', [$setting->key])
                 ]);
-                break;
             case SettingType::PASSWORD:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label,
-                        'callback_data' => encodeCallback(self::$type, 'password', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label,
+                    'callback_data' => encodeCallback(self::$type, 'password', [$setting->key])
                 ]);
-                break;
             case SettingType::ENUM:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label,
-                        'callback_data' => encodeCallback(self::$type, 'enum', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label,
+                    'callback_data' => encodeCallback(self::$type, 'enum', [$setting->key])
                 ]);
-                break;
             case SettingType::SELECT:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label,
-                        'callback_data' => encodeCallback(self::$type, 'select', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label,
+                    'callback_data' => encodeCallback(self::$type, 'select', [$setting->key])
                 ]);
-                break;
             case SettingType::MULTISELECT:
-                $replyMarkup->row([
-                    Keyboard::inlineButton([
-                        'text' => $setting->label,
-                        'callback_data' => encodeCallback(self::$type, 'multiselect', [$setting->key])
-                    ])
+                return Keyboard::inlineButton([
+                    'text' => $setting->label,
+                    'callback_data' => encodeCallback(self::$type, 'multiselect', [$setting->key])
                 ]);
-                break;
         }
+        return null;
     }
 }

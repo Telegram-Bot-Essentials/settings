@@ -49,7 +49,7 @@ class Settings
         switch ($setting->type) {
             case SettingType::CHECKBOX:
                 $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
-                    ->where('key', $key)->first()
+                    ->where('key', $key)->firstOrCreate()
                     ->update(['value' => $data]);
                 return $botSetting ? boolval($botSetting->value) : ($setting->default ?? $key);
         }
