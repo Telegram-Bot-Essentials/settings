@@ -13,6 +13,11 @@ class BotSettingsQuery extends CallbackQuery
     protected string $type = 'BTSTNG';
     protected int $perm = Roles::ADMIN->value;
 
+    public function start(): void
+    {
+        BotSettingsFeature::menu()->update();
+    }
+
     public function update(string $key): void
     {
         $setting = settings()->getSetting($key);
@@ -37,11 +42,21 @@ class BotSettingsQuery extends CallbackQuery
                 $x = nextInArray($setting->options ?? [], settings()->get($key));
                 settings()->set($key, $x);
                 break;
+            case SettingType::SELECT:
+                $tgResponse = BotSettingsFeature::select($setting);
+                break;
             default:
                 break;
         }
 
         $tgResponse = $tgResponse ?? BotSettingsFeature::menu();
         $tgResponse->update();
+    }
+
+    public function select(string $key, string $optionKey): void
+    {
+        $setting = settings()->getSetting($key);
+        settings()->set($key, $setting->options[$optionKey] ?? []);
+        BotSettingsFeature::menu()->update();
     }
 }

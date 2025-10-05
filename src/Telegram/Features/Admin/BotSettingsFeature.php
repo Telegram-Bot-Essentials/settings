@@ -78,7 +78,7 @@ class BotSettingsFeature
                 ]);
             case SettingType::ENUM:
                 return Keyboard::inlineButton([
-                    'text' => $setting->getTypeEmoji() . ' ' . $setting->label . ': ' . settings()->get($setting->key),
+                    'text' => $setting->getTypeEmoji() . ' ' . $setting->label . ': ' . (settings()->get($setting->key) ?? 'N/A'),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             default:
@@ -87,5 +87,37 @@ class BotSettingsFeature
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
         }
+    }
+
+    public static function select(Setting $setting): TelegramResponse
+    {
+        $text = 'No Options found';
+
+        $replyMarkup = Keyboard::make()
+            ->inline();
+
+        $currentValue = settings()->get($setting->key);
+
+        $keys = [];
+        foreach ($setting->options as $optionKey => $value) {
+            $keys[] = Keyboard::inlineButton([
+                'text' => $value . ' ' . ($currentValue == $value ? '✅' : ''),
+                'callback_data' => encodeCallback(self::$type, 'select', [$setting->key, $optionKey])
+            ]);
+        }
+        if (count($keys) > 0) $text = 'Select the option:';
+        addInlineKeysSmartSorted($replyMarkup, $keys, 2);
+
+        $replyMarkup->row([
+            Keyboard::inlineButton([
+                'text' => __('tbe::general.keys.back'),
+                'callback_data' => encodeCallback(self::$type, 'start')
+            ])
+        ]);
+
+        return new TelegramResponse(
+            text: $text,
+            replyMarkup: $replyMarkup,
+        );
     }
 }

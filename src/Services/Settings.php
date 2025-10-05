@@ -4,10 +4,10 @@ namespace TelegramBotEssentials\Settings\Services;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
+use TelegramBotEssentials\Essence\Exceptions\TbeException;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Models\BotSetting;
-use function Symfony\Component\String\b;
 
 class Settings
 {
@@ -55,7 +55,7 @@ class Settings
                 break;
         }
 
-        if(is_null($value)) $value = $setting->default ?? null;
+        if (is_null($value)) $value = $setting->default ?? null;
 
         return $value;
     }
@@ -63,6 +63,10 @@ class Settings
     public function set(string $key, mixed $data): mixed
     {
         $setting = $this->settings->get($key);
+
+        if (!$setting) {
+            throw new TbeException('Setting "' . $key . '" not found');
+        }
 
         $rules = $this->getValidationRuleForType($setting);
         Validator::validate(
