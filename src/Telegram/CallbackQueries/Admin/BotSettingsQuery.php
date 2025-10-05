@@ -2,11 +2,7 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\CallbackQueries\Admin;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Support\Facades\App;
-use Telegram\Bot\Exceptions\TelegramSDKException;
 use TelegramBotEssentials\Essence\Enums\Roles;
-use TelegramBotEssentials\Essence\Exceptions\LogicException;
 use TelegramBotEssentials\Essence\Models\MessageMeta;
 use TelegramBotEssentials\Essence\Telegram\CallbackQueries\CallbackQuery;
 use TelegramBotEssentials\Settings\Enums\SettingType;
@@ -23,7 +19,19 @@ class BotSettingsQuery extends CallbackQuery
 
         switch ($setting->type) {
             case SettingType::CHECKBOX:
-                settings()->set($key, settings()->get($key));
+                settings()->set($key, !settings()->get($key));
+                break;
+            case SettingType::TEXT:
+                debugMessage('test');
+                wHook()->user()->changeState(encodeAnswerState($this->type, 'update', ["key" => $key]));
+                MessageMeta::makeWithCurrentMessage()->deleteMessage();
+                wHook()->api()->sendMessage([
+                    'chat_id' => wHook()->user()->telegramUser->peer_id,
+                    'text' => 'Enter new value for ' . $setting->label . ':',
+                    'reply_markup' => wHook()->user()->getKeyboard(),
+                ]);
+                break;
+            default:
                 break;
         }
 

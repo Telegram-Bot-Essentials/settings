@@ -34,25 +34,27 @@ class Settings
     public function get(string $key): mixed
     {
         $setting = $this->settings->get($key);
+        $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
+            ->where('key', $key)->first();
+
         switch ($setting->type) {
             case SettingType::CHECKBOX:
-                $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
-                    ->where('key', $key)->first();
                 return $botSetting ? boolval($botSetting->value) : ($setting->default ?? $key);
         }
-        return $key;
+        return $botSetting->value ?? ($setting->default ?? null);
     }
 
     public function set(string $key, mixed $data): mixed
     {
         $setting = $this->settings->get($key);
-        switch ($setting->type) {
-            case SettingType::CHECKBOX:
-                $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
-                    ->where('key', $key)->firstOrCreate()
-                    ->update(['value' => $data]);
-                return $botSetting ? boolval($botSetting->value) : ($setting->default ?? $key);
-        }
-        return $key;
+
+        $botSetting = BotSetting::query()
+            ->firstOrCreate([
+                'bot_id' => wHook()->bot()->id,
+                'key' => $key,
+            ]);
+
+        $botSetting->update(['value' => $data ?? $setting->default]);
+        return $botSetting->value;
     }
 }

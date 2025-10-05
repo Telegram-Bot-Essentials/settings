@@ -24,6 +24,8 @@ class Setting
                 throw new TbeException('Checkbox default value must be true or false');
             }
             $this->default = $default;
+        }else{
+            $this->default = $default;
         }
     }
 }
