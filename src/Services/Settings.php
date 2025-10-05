@@ -51,7 +51,7 @@ class Settings
                 $value = $botSetting->value == null ? null : decrypt($botSetting->value);
                 break;
             case SettingType::MULTISELECT:
-                $value = $botSetting->value == null ? null : json_decode($botSetting->value);
+                $value = $botSetting->value == null ? ($setting->default ?? []) : explode(',', $botSetting->value);
                 break;
         }
 
@@ -100,7 +100,7 @@ class Settings
                 $rules = 'required|in:' . implode(',', $setting->options);
                 break;
             case SettingType::MULTISELECT:
-                $rules = 'required|array';
+                $rules = 'nullable|array';
                 break;
             case SettingType::CHECKBOX:
                 $rules = 'required|boolean';
@@ -122,7 +122,7 @@ class Settings
                 $data = encrypt($data);
                 break;
             case SettingType::MULTISELECT:
-                $data = json_encode($data);
+                $data = implode(',', $data);
                 break;
         }
 

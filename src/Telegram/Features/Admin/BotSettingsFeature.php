@@ -120,4 +120,37 @@ class BotSettingsFeature
             replyMarkup: $replyMarkup,
         );
     }
+
+    public static function multiselect(Setting $setting)
+    {
+        $text = 'No Options found';
+
+        $replyMarkup = Keyboard::make()
+            ->inline();
+
+        $currentValue = settings()->get($setting->key);
+
+        $keys = [];
+        foreach ($setting->options as $optionKey => $value) {
+            $exist = in_array($value, $currentValue);
+            $keys[] = Keyboard::inlineButton([
+                'text' => $value . ' ' . ($exist ? '✅' : ''),
+                'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey,  $exist])
+            ]);
+        }
+        if (count($keys) > 0) $text = 'Select the option:';
+        addInlineKeysSmartSorted($replyMarkup, $keys, 2);
+
+        $replyMarkup->row([
+            Keyboard::inlineButton([
+                'text' => __('tbe::general.keys.back'),
+                'callback_data' => encodeCallback(self::$type, 'start')
+            ])
+        ]);
+
+        return new TelegramResponse(
+            text: $text,
+            replyMarkup: $replyMarkup,
+        );
+    }
 }

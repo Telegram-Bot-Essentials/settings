@@ -45,7 +45,8 @@ class BotSettingsQuery extends CallbackQuery
             case SettingType::SELECT:
                 $tgResponse = BotSettingsFeature::select($setting);
                 break;
-            default:
+            case SettingType::MULTISELECT:
+                $tgResponse = BotSettingsFeature::multiselect($setting);
                 break;
         }
 
@@ -58,5 +59,18 @@ class BotSettingsQuery extends CallbackQuery
         $setting = settings()->getSetting($key);
         settings()->set($key, $setting->options[$optionKey] ?? []);
         BotSettingsFeature::menu()->update();
+    }
+
+    public function multiSelect(string $key, string $optionKey, bool $remove): void
+    {
+        $setting = settings()->getSetting($key);
+        $result = settings()->get($key);
+        if($remove){
+            $result = array_filter($result, fn($value) => $value != $setting->options[$optionKey] ?? null);
+        }else{
+            $result[] = $setting->options[$optionKey] ?? null;
+        }
+        settings()->set($key, $result);
+        BotSettingsFeature::multiselect($setting)->update();
     }
 }
