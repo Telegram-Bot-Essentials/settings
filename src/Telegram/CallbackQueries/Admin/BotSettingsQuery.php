@@ -17,6 +17,7 @@ class BotSettingsQuery extends CallbackQuery
     {
         $setting = settings()->getSetting($key);
 
+        $this->answer("Editing $setting->label...");
         switch ($setting->type) {
             case SettingType::CHECKBOX:
                 settings()->set($key, !settings()->get($key));

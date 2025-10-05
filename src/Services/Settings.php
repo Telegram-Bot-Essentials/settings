@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Models\BotSetting;
+use function Symfony\Component\String\b;
 
 class Settings
 {
@@ -39,9 +40,9 @@ class Settings
             ->firstOrCreate(['key' => $key]);
 
         switch ($setting->type) {
+            case SettingType::CHECKBOX:
             case SettingType::SELECT:
             case SettingType::ENUM:
-            case SettingType::CHECKBOX:
             case SettingType::NUMBER:
             case SettingType::TEXT:
                 $value = $botSetting->value;
@@ -54,7 +55,7 @@ class Settings
                 break;
         }
 
-        if(!$value) $value = $setting->default ?? null;
+        if(is_null($value)) $value = $setting->default ?? null;
 
         return $value;
     }

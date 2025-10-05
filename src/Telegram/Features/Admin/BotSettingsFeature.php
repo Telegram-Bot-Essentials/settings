@@ -31,7 +31,7 @@ class BotSettingsFeature
         $text .= "\r\n";
         $text .= "\r\n";
         settings()->getSettings()->each(function ($setting) use (&$keys, &$text) {
-            $key = self::renderSetting($setting);
+            $key = self::renderSettingKey($setting);
             if ($key) {
                 $keys[] = $key;
             }
@@ -58,7 +58,7 @@ class BotSettingsFeature
             $text .= "\r\n";
         });
 
-//        array_filter($keys);
+        array_filter($keys);
         addInlineKeysSmartSorted($replyMarkup, $keys, 3);
 
         return new TelegramResponse(
@@ -68,12 +68,17 @@ class BotSettingsFeature
         );
     }
 
-    public static function renderSetting(Setting $setting): ?Button
+    public static function renderSettingKey(Setting $setting): ?Button
     {
         switch ($setting->type) {
             case SettingType::CHECKBOX:
                 return Keyboard::inlineButton([
                     'text' => $setting->label . ' ' . (settings()->get($setting->key) ? '✅' : '❌'),
+                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
+                ]);
+            case SettingType::ENUM:
+                return Keyboard::inlineButton([
+                    'text' => $setting->getTypeEmoji() . ' ' . $setting->label . ': ' . settings()->get($setting->key),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             default:
