@@ -35,7 +35,27 @@ class BotSettingsFeature
             if ($key) {
                 $keys[] = $key;
             }
-            $text .= "<b>{$setting->label}</b>: <i>" . (settings()->get($setting->key) ?? "N/A") . "</i>";
+            switch ($setting->type) {
+                case SettingType::SELECT:
+                case SettingType::ENUM:
+                case SettingType::NUMBER:
+                case SettingType::TEXT:
+                    $text .= "<b>{$setting->label}</b>: <i>" . (settings()->get($setting->key) ?? "N/A") . "</i>";
+                    break;
+                case SettingType::CHECKBOX:
+                    $text .= "<b>{$setting->label}</b>: <i>"
+                        . (settings()->get($setting->key)
+                            ? __('tbe::general.status.enabled') . ' ' . __('tbe::general.status.enabledEmoji')
+                            : __('tbe::general.status.disabled') . ' ' . __('tbe::general.status.disabledEmoji')
+                        ) . "</i>";
+                    break;
+                case SettingType::SENSITIVE:
+                    $text .= "<b>{$setting->label}</b>: <i><tg-spoiler>" . (settings()->get($setting->key) ?? "N/A") . "</tg-spoiler></i>";
+                    break;
+                case SettingType::MULTISELECT:
+                    $value = settings()->get($setting->key) == null ? "N/A" : json_decode(settings()->get($setting->key));
+                    break;
+            }
             $text .= "\r\n";
         });
 
@@ -66,7 +86,7 @@ class BotSettingsFeature
                     'text' => $setting->label,
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
-            case SettingType::PASSWORD:
+            case SettingType::SENSITIVE:
                 return Keyboard::inlineButton([
                     'text' => $setting->label,
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])

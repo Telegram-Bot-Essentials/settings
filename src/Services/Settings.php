@@ -46,7 +46,7 @@ class Settings
             case SettingType::TEXT:
                 $value = $botSetting->value;
                 break;
-            case SettingType::PASSWORD:
+            case SettingType::SENSITIVE:
                 $value = $botSetting->value == null ? null : decrypt($botSetting->value);
                 break;
             case SettingType::MULTISELECT:
@@ -87,7 +87,7 @@ class Settings
                 $rules = 'required|numeric';
                 break;
             case SettingType::TEXT:
-            case SettingType::PASSWORD:
+            case SettingType::SENSITIVE:
                 $rules = 'required|string';
                 break;
             case SettingType::SELECT:
@@ -113,7 +113,7 @@ class Settings
             case SettingType::NUMBER:
             case SettingType::TEXT:
                 break;
-            case SettingType::PASSWORD:
+            case SettingType::SENSITIVE:
                 $data = encrypt($data);
                 break;
             case SettingType::MULTISELECT:

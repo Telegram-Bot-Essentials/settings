@@ -18,6 +18,8 @@ class BotSettingsAnswer extends StateAnswer
         $setting = settings()->getSetting($key);
 
         switch ($setting->type) {
+            case SettingType::SENSITIVE:
+            case SettingType::NUMBER:
             case SettingType::TEXT:
                 settings()->set($key, wHook()->update()->message->text);
                 wHook()->user()->changeState();
@@ -27,14 +29,6 @@ class BotSettingsAnswer extends StateAnswer
                     'reply_markup' => wHook()->user()->getKeyboard()
                 ]);
                 break;
-            case SettingType::NUMBER:
-                settings()->set($key, wHook()->update()->message->text);
-                wHook()->user()->changeState();
-                wHook()->api()->sendMessage([
-                    'chat_id' => wHook()->user()->telegramUser->peer_id,
-                    'text' => "$key updated successfully",
-                    'reply_markup' => wHook()->user()->getKeyboard()
-                ]);
         }
 
         BotSettingsFeature::menu()->send();
