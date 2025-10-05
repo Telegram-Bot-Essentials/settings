@@ -22,6 +22,12 @@ class BotSettingsAnswer extends StateAnswer
         switch ($setting->type) {
             case SettingType::TEXT:
                 settings()->set($key, wHook()->update()->message->text);
+                wHook()->user()->changeState();
+                wHook()->api()->sendMessage([
+                    'chat_id' => wHook()->user()->telegramUser->peer_id,
+                    'text' => "$key updated successfully",
+                    'reply_markup' => wHook()->user()->getKeyboard()
+                ]);
                 break;
         }
     }

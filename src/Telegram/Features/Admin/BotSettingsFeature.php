@@ -35,7 +35,7 @@ class BotSettingsFeature
             if ($key) {
                 $keys[] = $key;
             }
-            $text .= "<b>{$setting->key}</b>: <i>" . (settings()->get($setting->key) ?? "N/A") . "</i>";
+            $text .= "<b>{$setting->label}</b>: <i>" . (settings()->get($setting->key) ?? "N/A") . "</i>";
             $text .= "\r\n";
         });
 
