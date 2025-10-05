@@ -28,30 +28,29 @@ class BotSettingsFeature
             );
         }
 
+        $NA = "<u>N/A</u>";
+
         $text .= "\r\n";
         $text .= "\r\n";
-        settings()->getSettings()->each(function ($setting) use (&$keys, &$text) {
+        settings()->getSettings()->each(function ($setting) use (&$keys, &$text, $NA) {
             $key = self::renderSettingKey($setting);
             if ($key) {
                 $keys[] = $key;
             }
             switch ($setting->type) {
-
                 case SettingType::CHECKBOX:
                     $value = settings()->get($setting->key)
                         ? __('tbe::general.status.enabled') . ' ' . __('tbe::general.status.enabledEmoji')
                         : __('tbe::general.status.disabled') . ' ' . __('tbe::general.status.disabledEmoji');
                     break;
                 case SettingType::SENSITIVE:
-                    $value = "<tg-spoiler>" . (settings()->get($setting->key) ?? "N/A") . "</tg-spoiler>";
+                    $value = settings()->get($setting->key) ? "<tg-spoiler>" . (settings()->get($setting->key)) . "</tg-spoiler>" : $NA;
                     break;
                 case SettingType::MULTISELECT:
-//                    $text .= "<b>{$setting->label}</b>: <i>"
-//                    . settings()->get($setting->key) == null ? "N/A" : implode(', ',settings()->get($setting->key) ?? []) . "</i>";
-                    $value = 'xxxx';
+                    $value = settings()->get($setting->key) ? implode(', ', settings()->get($setting->key) ?? []) : $NA;
                     break;
                 default:
-                    $value = settings()->get($setting->key) ?? "N/A";
+                    $value = settings()->get($setting->key) ?? $NA;
                     break;
             }
             $text .= "<b>{$setting->label}</b>: <i>" . $value . "</i>";
@@ -135,7 +134,7 @@ class BotSettingsFeature
             $exist = in_array($value, $currentValue);
             $keys[] = Keyboard::inlineButton([
                 'text' => $value . ' ' . ($exist ? '✅' : ''),
-                'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey,  $exist])
+                'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey, $exist])
             ]);
         }
         if (count($keys) > 0) $text = 'Select the option:';
