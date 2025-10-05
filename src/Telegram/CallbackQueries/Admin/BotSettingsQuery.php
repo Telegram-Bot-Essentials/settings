@@ -36,6 +36,7 @@ class BotSettingsQuery extends CallbackQuery
                 break;
         }
 
-        BotSettingsFeature::menu()->update();
+        $tgResponse = $tgResponse ?? BotSettingsFeature::menu();
+        $tgResponse->update();
     }
 }

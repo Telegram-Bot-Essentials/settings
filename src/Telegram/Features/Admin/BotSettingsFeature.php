@@ -30,35 +30,35 @@ class BotSettingsFeature
 
         $text .= "\r\n";
         $text .= "\r\n";
-        settings()->getSettings()->each(function ($setting) use (&$keys, $replyMarkup, &$text) {
-            $key = self::renderSetting($setting, $replyMarkup);
+        settings()->getSettings()->each(function ($setting) use (&$keys, &$text) {
+            $key = self::renderSetting($setting);
             if ($key) {
                 $keys[] = $key;
             }
             switch ($setting->type) {
-                case SettingType::SELECT:
-                case SettingType::ENUM:
-                case SettingType::NUMBER:
-                case SettingType::TEXT:
-                    $text .= "<b>{$setting->label}</b>: <i>" . (settings()->get($setting->key) ?? "N/A") . "</i>";
-                    break;
+
                 case SettingType::CHECKBOX:
-                    $text .= "<b>{$setting->label}</b>: <i>"
-                        . (settings()->get($setting->key)
-                            ? __('tbe::general.status.enabled') . ' ' . __('tbe::general.status.enabledEmoji')
-                            : __('tbe::general.status.disabled') . ' ' . __('tbe::general.status.disabledEmoji')
-                        ) . "</i>";
+                    $value = settings()->get($setting->key)
+                        ? __('tbe::general.status.enabled') . ' ' . __('tbe::general.status.enabledEmoji')
+                        : __('tbe::general.status.disabled') . ' ' . __('tbe::general.status.disabledEmoji');
                     break;
                 case SettingType::SENSITIVE:
-                    $text .= "<b>{$setting->label}</b>: <i><tg-spoiler>" . (settings()->get($setting->key) ?? "N/A") . "</tg-spoiler></i>";
+                    $value = "<tg-spoiler>" . (settings()->get($setting->key) ?? "N/A") . "</tg-spoiler>";
                     break;
                 case SettingType::MULTISELECT:
-                    $value = settings()->get($setting->key) == null ? "N/A" : json_decode(settings()->get($setting->key));
+//                    $text .= "<b>{$setting->label}</b>: <i>"
+//                    . settings()->get($setting->key) == null ? "N/A" : implode(', ',settings()->get($setting->key) ?? []) . "</i>";
+                    $value = 'xxxx';
+                    break;
+                default:
+                    $value = settings()->get($setting->key) ?? "N/A";
                     break;
             }
+            $text .= "<b>{$setting->label}</b>: <i>" . $value . "</i>";
             $text .= "\r\n";
         });
 
+//        array_filter($keys);
         addInlineKeysSmartSorted($replyMarkup, $keys, 3);
 
         return new TelegramResponse(
@@ -68,7 +68,7 @@ class BotSettingsFeature
         );
     }
 
-    public static function renderSetting(Setting $setting, Keyboard $replyMarkup): ?Button
+    public static function renderSetting(Setting $setting): ?Button
     {
         switch ($setting->type) {
             case SettingType::CHECKBOX:
@@ -76,37 +76,11 @@ class BotSettingsFeature
                     'text' => $setting->label . ' ' . (settings()->get($setting->key) ? '✅' : '❌'),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
-            case SettingType::TEXT:
+            default:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . "🏷",
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
-                ]);
-            case SettingType::NUMBER:
-                return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . "⚖️",
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
-                ]);
-            case SettingType::SENSITIVE:
-                return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . '🔑',
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
-                ]);
-            case SettingType::ENUM:
-                return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . '🗄',
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
-                ]);
-            case SettingType::SELECT:
-                return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . "📁",
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
-                ]);
-            case SettingType::MULTISELECT:
-                return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . '🗂',
+                    'text' => $setting->label . ' ' . $setting->getTypeEmoji(),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
         }
-        return null;
     }
 }

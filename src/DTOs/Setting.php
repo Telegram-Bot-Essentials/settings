@@ -11,8 +11,9 @@ class Setting
 
     public function __construct(
         public string $key, public string $label, public SettingType $type,
-        mixed  $default = null, public ?array $enums = null, public ?string $description = null
-    ) {
+        mixed         $default = null, public ?array $enums = null, public ?string $description = null
+    )
+    {
         $this->setDefault($default);
     }
 
@@ -24,8 +25,29 @@ class Setting
                 throw new TbeException('Checkbox default value must be true or false');
             }
             $this->default = $default;
-        }else{
+        } else {
             $this->default = $default;
         }
+    }
+
+    public function getTypeEmoji(): string
+    {
+        switch ($this->type) {
+            case SettingType::CHECKBOX:
+                return 'z';
+            case SettingType::SENSITIVE:
+                return "🏷";
+            case SettingType::NUMBER:
+                return "⚖️";
+            case SettingType::TEXT:
+                return '🔑';
+            case SettingType::ENUM:
+                return '🗄';
+            case SettingType::SELECT:
+                return "📁";
+            case SettingType::MULTISELECT:
+                return '🗂';
+        }
+        return 'Unknown Setting Type';
     }
 }

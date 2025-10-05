@@ -25,7 +25,7 @@ class BotSettingsAnswer extends StateAnswer
                 wHook()->user()->changeState();
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
-                    'text' => "$key updated successfully",
+                    'text' => "{$setting->label} updated successfully",
                     'reply_markup' => wHook()->user()->getKeyboard()
                 ]);
                 break;
