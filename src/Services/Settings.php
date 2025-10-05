@@ -3,6 +3,7 @@
 namespace TelegramBotEssentials\Settings\Services;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Models\BotSetting;
@@ -47,6 +48,33 @@ class Settings
     public function set(string $key, mixed $data): mixed
     {
         $setting = $this->settings->get($key);
+
+        $rules = 'required';
+        switch ($setting->type) {
+            case SettingType::NUMBER:
+                $rules = 'required|numeric';
+                break;
+            case SettingType::TEXT:
+            case SettingType::PASSWORD:
+                $rules = 'required|string';
+                break;
+            case SettingType::SELECT:
+            case SettingType::ENUM:
+                $rules = 'required|in:' . implode(',', $setting->enums);
+                break;
+            case SettingType::MULTISELECT:
+                $rules = 'required|array';
+                break;
+            case SettingType::CHECKBOX:
+                $rules = 'required|boolean';
+                break;
+        }
+
+        Validator::validate(
+            ['value' => $data],
+            ['value' => $rules],
+            attributes: ['value' => $setting->label]
+        );
 
         $botSetting = BotSetting::query()
             ->firstOrCreate([

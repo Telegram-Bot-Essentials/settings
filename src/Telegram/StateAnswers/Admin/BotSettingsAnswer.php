@@ -2,11 +2,9 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\StateAnswers\Admin;
 
+use Illuminate\Support\Facades\Validator;
 use TelegramBotEssentials\Essence\Enums\Roles;
-use TelegramBotEssentials\Essence\Exceptions\LogicException;
 use TelegramBotEssentials\Essence\Telegram\StateAnswers\StateAnswer;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Telegram\Bot\Exceptions\TelegramSDKException;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
 
@@ -29,6 +27,16 @@ class BotSettingsAnswer extends StateAnswer
                     'reply_markup' => wHook()->user()->getKeyboard()
                 ]);
                 break;
+            case SettingType::NUMBER:
+                settings()->set($key, wHook()->update()->message->text);
+                wHook()->user()->changeState();
+                wHook()->api()->sendMessage([
+                    'chat_id' => wHook()->user()->telegramUser->peer_id,
+                    'text' => "$key updated successfully",
+                    'reply_markup' => wHook()->user()->getKeyboard()
+                ]);
         }
+
+        BotSettingsFeature::menu()->send();
     }
 }

@@ -21,6 +21,7 @@ class BotSettingsQuery extends CallbackQuery
             case SettingType::CHECKBOX:
                 settings()->set($key, !settings()->get($key));
                 break;
+            case SettingType::NUMBER:
             case SettingType::TEXT:
                 wHook()->user()->changeState(encodeAnswerState($this->type, 'update', ["key" => $key]));
                 MessageMeta::makeWithCurrentMessage()->deleteMessage();
