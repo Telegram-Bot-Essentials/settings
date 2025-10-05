@@ -32,6 +32,10 @@ class BotSettingsQuery extends CallbackQuery
                     'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
                 break;
+            case SettingType::ENUM:
+                $x = nextInArray($setting->options ?? [], settings()->get($key));
+                settings()->set($key, $x);
+                break;
             default:
                 break;
         }

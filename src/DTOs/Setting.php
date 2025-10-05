@@ -8,13 +8,15 @@ use TelegramBotEssentials\Settings\Enums\SettingType;
 class Setting
 {
     public mixed $default;
+    public ?array $options;
 
     public function __construct(
         public string $key, public string $label, public SettingType $type,
-        mixed         $default = null, public ?array $enums = null, public ?string $description = null
+        mixed         $default = null, ?array $options = null, public ?string $description = null
     )
     {
         $this->setDefault($default);
+        $this->setEnums($options);
     }
 
     private function setDefault(mixed $default): void
@@ -28,6 +30,20 @@ class Setting
         } else {
             $this->default = $default;
         }
+    }
+
+    private function setEnums(?array $options)
+    {
+        switch ($this->type) {
+            case SettingType::ENUM:
+            case SettingType::SELECT:
+            case SettingType::MULTISELECT:
+                if (empty($options)) {
+                    throw new TbeException('Options must be provided for setting type: ' . $this->type->value);
+                }
+                break;
+        }
+        $this->options = $options;
     }
 
     public function getTypeEmoji(): string

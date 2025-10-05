@@ -63,7 +63,7 @@ class Settings
     {
         $setting = $this->settings->get($key);
 
-        $rules = $this->getValidationRuleForType($setting->type);
+        $rules = $this->getValidationRuleForType($setting);
         Validator::validate(
             ['value' => $data],
             ['value' => $rules],
@@ -79,10 +79,10 @@ class Settings
         return $this->setValueForType($botSetting, $data ?? $setting->default, $setting->type);
     }
 
-    private function getValidationRuleForType(SettingType $type): string
+    private function getValidationRuleForType(Setting $setting): string
     {
         $rules = 'required';
-        switch ($type) {
+        switch ($setting->type) {
             case SettingType::NUMBER:
                 $rules = 'required|numeric';
                 break;
@@ -92,7 +92,7 @@ class Settings
                 break;
             case SettingType::SELECT:
             case SettingType::ENUM:
-                $rules = 'required|in:' . implode(',', $setting->enums);
+                $rules = 'required|in:' . implode(',', $setting->options);
                 break;
             case SettingType::MULTISELECT:
                 $rules = 'required|array';
