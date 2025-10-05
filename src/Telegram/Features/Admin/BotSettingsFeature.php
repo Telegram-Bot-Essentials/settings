@@ -78,32 +78,32 @@ class BotSettingsFeature
                 ]);
             case SettingType::TEXT:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . "✏",
+                    'text' => $setting->label . ' ' . "🏷",
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             case SettingType::NUMBER:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label,
+                    'text' => $setting->label . ' ' . "⚖️",
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             case SettingType::SENSITIVE:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label,
+                    'text' => $setting->label . ' ' . '🔑',
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             case SettingType::ENUM:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label,
+                    'text' => $setting->label . ' ' . '🗄',
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             case SettingType::SELECT:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label,
+                    'text' => $setting->label . ' ' . "📁",
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             case SettingType::MULTISELECT:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label,
+                    'text' => $setting->label . ' ' . '🗂',
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
         }
