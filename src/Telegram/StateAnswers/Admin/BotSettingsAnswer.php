@@ -33,4 +33,14 @@ class BotSettingsAnswer extends StateAnswer
 
         BotSettingsFeature::menu()->send();
     }
+
+    function cancel(): void
+    {
+        $key = $this->params['key'] ?? null;
+        if($key){
+            settings()->set($key, null);
+        }
+
+        BotSettingsFeature::menu()->send();
+    }
 }

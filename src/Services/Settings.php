@@ -89,21 +89,21 @@ class Settings
         $rules = 'required';
         switch ($setting->type) {
             case SettingType::NUMBER:
-                $rules = 'required|numeric';
+                $rules = 'nullable|numeric';
                 break;
             case SettingType::TEXT:
             case SettingType::SENSITIVE:
-                $rules = 'required|string';
+                $rules = 'nullable|string';
                 break;
             case SettingType::SELECT:
             case SettingType::ENUM:
-                $rules = 'required|in:' . implode(',', $setting->options);
+                $rules = 'nullable|in:' . implode(',', $setting->options);
                 break;
             case SettingType::MULTISELECT:
                 $rules = 'nullable|array';
                 break;
             case SettingType::CHECKBOX:
-                $rules = 'required|boolean';
+                $rules = 'nullable|boolean';
                 break;
         }
         return $rules;
