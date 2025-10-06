@@ -13,9 +13,9 @@ class BotSettingsQuery extends CallbackQuery
     protected string $type = 'BTSTNG';
     protected int $perm = Roles::ADMIN->value;
 
-    public function start(): void
+    public function menu(?string $depth = null): void
     {
-        BotSettingsFeature::menu()->update();
+        BotSettingsFeature::menu($depth)->update();
     }
 
     public function update(string $key): void

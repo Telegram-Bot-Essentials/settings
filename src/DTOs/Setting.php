@@ -50,19 +50,21 @@ class Setting
     {
         switch ($this->type) {
             case SettingType::CHECKBOX:
-                return 'z';
+                return (settings()->get($this->key) ? '✅' : '❌');   // Checkbox — clear visual cue
             case SettingType::SENSITIVE:
-                return "🏷";
+                return '🔒';   // Sensitive — lock for security/privacy
             case SettingType::NUMBER:
-                return "⚖️";
+                return '🔢';   // Number — perfect numeric representation
             case SettingType::TEXT:
-                return '🔑';
+                return '💬';   // Text — speech bubble for input text
             case SettingType::ENUM:
-                return '🗄';
+                return '🧩';   // Enum — puzzle piece for distinct options
             case SettingType::SELECT:
-                return "📁";
+                return '📋';   // Select — clipboard or list metaphor
             case SettingType::MULTISELECT:
-                return '🗂';
+                return '🗃️';  // Multiselect — file box for grouped options
+            case SettingType::DIRECTORY:
+                return '📂';   // Directory — open folder fits perfectly
         }
         return 'Unknown Setting Type';
     }

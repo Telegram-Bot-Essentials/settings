@@ -11,4 +11,5 @@ enum SettingType: string
     case ENUM = 'enum';
     case SELECT = 'select';
     case MULTISELECT = 'multiselect';
+    case DIRECTORY = 'directory';
 }
