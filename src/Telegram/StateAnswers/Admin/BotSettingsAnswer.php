@@ -34,6 +34,7 @@ class BotSettingsAnswer extends StateAnswer
         BotSettingsFeature::menu()->send();
     }
 
+    // TODO: it can improved by adding support of different cancellation keys, so we will be able to cancel or delete the setting by choosing the right key
     function cancel(): void
     {
         $key = $this->params['key'] ?? null;
