@@ -37,7 +37,7 @@ class BotSettingsQuery extends CallbackQuery
                     'text' => 'Enter new value for ' . $setting->label . ':',
                     'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
-                break;
+                return;
             case SettingType::ENUM:
                 $x = nextInArray($setting->options ?? [], settings()->get($key));
                 settings()->set($key, $x);
@@ -50,7 +50,11 @@ class BotSettingsQuery extends CallbackQuery
                 break;
         }
 
-        $tgResponse = $tgResponse ?? BotSettingsFeature::menu();
+        $depth = explode('.', $key);
+        array_pop($depth);
+        $depth = implode('.', $depth);
+
+        $tgResponse = $tgResponse ?? BotSettingsFeature::menu($depth);
         $tgResponse->update();
     }
 
