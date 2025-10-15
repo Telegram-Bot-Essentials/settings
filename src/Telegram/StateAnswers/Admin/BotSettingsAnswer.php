@@ -31,7 +31,7 @@ class BotSettingsAnswer extends StateAnswer
                 break;
         }
 
-        BotSettingsFeature::menu()->send();
+        BotSettingsFeature::menu($this->extractDepthFromKey($key))->send();
     }
 
     // TODO: it can improved by adding support of different cancellation keys, so we will be able to cancel or delete the setting by choosing the right key
@@ -42,6 +42,18 @@ class BotSettingsAnswer extends StateAnswer
             settings()->set($key, null);
         }
 
-        BotSettingsFeature::menu()->send();
+        BotSettingsFeature::menu($this->extractDepthFromKey($key))->send();
+    }
+
+    private function extractDepthFromKey(?string $key): ?string
+    {
+        if (!$key || !str_contains($key, '.')) {
+            return null;
+        }
+
+        $segments = explode('.', $key);
+        array_pop($segments);
+
+        return implode('.', $segments);
     }
 }
