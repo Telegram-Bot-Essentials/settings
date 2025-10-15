@@ -17,6 +17,10 @@ class BotSettingsFeature
      */
     public static function menu(?string $depth = null): TelegramResponse
     {
+        if ($depth === '') {
+            $depth = null;
+        }
+
         $text = 'Bot Settings';
 
         $replyMarkup = Keyboard::make()
@@ -33,19 +37,37 @@ class BotSettingsFeature
         $text .= "\r\n";
         $text .= "\r\n";
 
-        $settingsOfDepth = settings()->getSettings()->filter(function ($setting) use ($depth) {
-            return $depth
-                ? str_starts_with($setting->key, $depth) && $setting->key != $depth
-                : str_starts_with($setting->key, $depth) && !str_contains($setting->key, '.');
+        $depthSegments = $depth ? explode('.', $depth) : [];
+
+        $settingsOfDepth = settings()->getSettings()->filter(function ($setting) use ($depthSegments) {
+            $keySegments = explode('.', $setting->key);
+
+            if (empty($depthSegments)) {
+                return count($keySegments) === 1;
+            }
+
+            if (count($keySegments) <= count($depthSegments)) {
+                return false;
+            }
+
+            if (array_slice($keySegments, 0, count($depthSegments)) !== $depthSegments) {
+                return false;
+            }
+
+            return count($keySegments) === count($depthSegments) + 1;
         });
 
+        $keys = [];
+
         $settingsOfDepth->each(function ($setting) use (&$keys, &$text, $NA) {
+            $value = null;
             $key = self::renderSettingKey($setting);
             if ($key) {
                 $keys[] = $key;
             }
             switch ($setting->type) {
                 case SettingType::DIRECTORY:
+                    $value = null;
                     break;
                 case SettingType::CHECKBOX:
                     $value = settings()->get($setting->key)
@@ -68,9 +90,10 @@ class BotSettingsFeature
             }
         });
 
-        $keys = $keys ?? [];
-        array_filter($keys);
-        addInlineKeysSmartSorted($replyMarkup, $keys, 3);
+        $keys = array_values(array_filter($keys));
+        if (!empty($keys)) {
+            addInlineKeysSmartSorted($replyMarkup, $keys, 3);
+        }
 
         if($depth){
             $replyMarkup->row([
