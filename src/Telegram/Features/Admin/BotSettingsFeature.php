@@ -21,18 +21,19 @@ class BotSettingsFeature
             $depth = null;
         }
 
-        $text = 'Bot Settings';
+        $text = __('tbe-settings::bot_settings.menu.title');
 
         $replyMarkup = Keyboard::make()
             ->inline();
 
         if (settings()->getSettings()->isEmpty()) {
             return new TelegramResponse(
-                text: 'No settings found',
+                text: __('tbe-settings::bot_settings.menu.empty'),
             );
         }
 
-        $NA = "<u>N/A</u>";
+        $notSet = __('tbe::general.status.notSet');
+        $NA = "<u>{$notSet}</u>";
 
         $text .= "\r\n";
         $text .= "\r\n";
@@ -121,7 +122,7 @@ class BotSettingsFeature
                 ]);
             case SettingType::ENUM:
                 return Keyboard::inlineButton([
-                    'text' => $setting->getTypeEmoji() . ' ' . $setting->label . ': ' . (settings()->get($setting->key) ?? 'N/A'),
+                    'text' => $setting->getTypeEmoji() . ' ' . $setting->label . ': ' . (settings()->get($setting->key) ?? __('tbe::general.status.notSet')),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
                 ]);
             default:
@@ -134,7 +135,7 @@ class BotSettingsFeature
 
     public static function select(Setting $setting): TelegramResponse
     {
-        $text = 'No Options found';
+        $text = __('tbe-settings::bot_settings.selectors.no_options');
 
         $replyMarkup = Keyboard::make()
             ->inline();
@@ -148,7 +149,9 @@ class BotSettingsFeature
                 'callback_data' => encodeCallback(self::$type, 'select', [$setting->key, $optionKey])
             ]);
         }
-        if (count($keys) > 0) $text = 'Select the option:';
+        if (count($keys) > 0) {
+            $text = __('tbe-settings::bot_settings.selectors.prompt');
+        }
         addInlineKeysSmartSorted($replyMarkup, $keys, 2);
 
         $replyMarkup->row([
@@ -166,7 +169,7 @@ class BotSettingsFeature
 
     public static function multiselect(Setting $setting)
     {
-        $text = 'No Options found';
+        $text = __('tbe-settings::bot_settings.selectors.no_options');
 
         $replyMarkup = Keyboard::make()
             ->inline();
@@ -181,7 +184,9 @@ class BotSettingsFeature
                 'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey, $exist])
             ]);
         }
-        if (count($keys) > 0) $text = 'Select the option:';
+        if (count($keys) > 0) {
+            $text = __('tbe-settings::bot_settings.selectors.prompt');
+        }
         addInlineKeysSmartSorted($replyMarkup, $keys, 2);
 
         $replyMarkup->row([

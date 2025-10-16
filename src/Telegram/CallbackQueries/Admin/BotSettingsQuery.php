@@ -22,7 +22,7 @@ class BotSettingsQuery extends CallbackQuery
     {
         $setting = settings()->getSetting($key);
 
-        $this->answer("Editing $setting->label...");
+        $this->answer(__('tbe-settings::bot_settings.messages.editing', ['label' => $setting->label]));
         switch ($setting->type) {
             case SettingType::CHECKBOX:
                 settings()->set($key, !settings()->get($key));
@@ -34,7 +34,7 @@ class BotSettingsQuery extends CallbackQuery
                 MessageMeta::makeWithCurrentMessage()->deleteMessage();
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
-                    'text' => 'Enter new value for ' . $setting->label . ':',
+                    'text' => __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->label]),
                     'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
                 return;

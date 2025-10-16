@@ -25,7 +25,7 @@ class BotSettingsAnswer extends StateAnswer
                 wHook()->user()->changeState();
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
-                    'text' => "{$setting->label} updated successfully",
+                    'text' => __('tbe-settings::bot_settings.messages.updated', ['label' => $setting->label]),
                     'reply_markup' => wHook()->user()->getKeyboard()
                 ]);
                 break;
