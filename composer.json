@@ -26,8 +26,8 @@
     "minimum-stability": "stable",
     "repositories": [
         {
-            "type": "path",
-            "url": "../telegram-bot-essentials"
+            "type": "vcs",
+            "url": "https://github.com/Elyar0/telegram-bot-essentials"
         }
     ],
     "extra": {
