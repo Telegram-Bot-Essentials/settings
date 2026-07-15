@@ -19,5 +19,9 @@ return [
     'prompts' => [
         'enter_new_value' => 'مقدار جدید :label را وارد کنید:',
     ],
+
+    'locale' => [
+        'label' => 'زبان ربات',
+    ],
 ];
 

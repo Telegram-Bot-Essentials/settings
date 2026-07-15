@@ -19,5 +19,9 @@ return [
     'prompts' => [
         'enter_new_value' => 'Enter new value for :label:',
     ],
+
+    'locale' => [
+        'label' => 'Bot Language',
+    ],
 ];
 

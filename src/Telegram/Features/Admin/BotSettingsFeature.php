@@ -12,9 +12,6 @@ class BotSettingsFeature
 {
     static string $type = 'BTSTNG';
 
-    /**
-     * @return TelegramResponse
-     */
     public static function menu(?string $depth = null): TelegramResponse
     {
         if ($depth === '') {
@@ -76,32 +73,38 @@ class BotSettingsFeature
                         : __('tbe::general.status.disabled');
                     break;
                 case SettingType::SENSITIVE:
-                    $value = settings()->get($setting->key) ? "<tg-spoiler>" . (settings()->get($setting->key)) . "</tg-spoiler>" : $NA;
+                    $value = settings()->get($setting->key) ? '<tg-spoiler>' . (settings()->get($setting->key)) . '</tg-spoiler>' : $NA;
                     break;
                 case SettingType::MULTISELECT:
                     $value = settings()->get($setting->key) ? implode(', ', settings()->get($setting->key) ?? []) : $NA;
+                    break;
+                case SettingType::SELECT:
+                    $currentValue = settings()->get($setting->key);
+                    $value = $currentValue
+                        ? $setting->getOptionLabel($currentValue)
+                        : $NA;
                     break;
                 default:
                     $value = settings()->get($setting->key) ?? $NA;
                     break;
             }
             if (isset($value)) {
-                $text .= "<b>{$setting->label}</b>: <i>" . $value . "</i>";
+                $text .= '<b>' . $setting->getLabel() . '</b>: <i>' . $value . '</i>';
                 $text .= "\r\n";
             }
         });
 
         $keys = array_values(array_filter($keys));
-        if (!empty($keys)) {
+        if (! empty($keys)) {
             addInlineKeysSmartSorted($replyMarkup, $keys, 3);
         }
 
-        if($depth){
+        if ($depth) {
             $replyMarkup->row([
                 Keyboard::inlineButton([
                     'text' => __('tbe::general.keys.back'),
-                    'callback_data' => encodeCallback(self::$type, 'menu', [self::cropLastDepth($depth)])
-                ])
+                    'callback_data' => encodeCallback(self::$type, 'menu', [self::cropLastDepth($depth)]),
+                ]),
             ]);
         }
 
@@ -117,18 +120,18 @@ class BotSettingsFeature
         switch ($setting->type) {
             case SettingType::DIRECTORY:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . $setting->getTypeEmoji(),
-                    'callback_data' => encodeCallback(self::$type, 'menu', [$setting->key])
+                    'text' => $setting->getLabel() . ' ' . $setting->getTypeEmoji(),
+                    'callback_data' => encodeCallback(self::$type, 'menu', [$setting->key]),
                 ]);
             case SettingType::ENUM:
                 return Keyboard::inlineButton([
-                    'text' => $setting->getTypeEmoji() . ' ' . $setting->label . ': ' . (settings()->get($setting->key) ?? __('tbe::general.status.notSet')),
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
+                    'text' => $setting->getTypeEmoji() . ' ' . $setting->getLabel() . ': ' . (settings()->get($setting->key) ?? __('tbe::general.status.notSet')),
+                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key]),
                 ]);
             default:
                 return Keyboard::inlineButton([
-                    'text' => $setting->label . ' ' . $setting->getTypeEmoji(),
-                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key])
+                    'text' => $setting->getLabel() . ' ' . $setting->getTypeEmoji(),
+                    'callback_data' => encodeCallback(self::$type, 'update', [$setting->key]),
                 ]);
         }
     }
@@ -141,12 +144,13 @@ class BotSettingsFeature
             ->inline();
 
         $currentValue = settings()->get($setting->key);
+        $options = $setting->getOptions();
 
         $keys = [];
-        foreach ($setting->options as $optionKey => $value) {
+        foreach ($options as $optionKey => $label) {
             $keys[] = Keyboard::inlineButton([
-                'text' => $value . ' ' . ($currentValue == $value ? '✅' : ''),
-                'callback_data' => encodeCallback(self::$type, 'select', [$setting->key, $optionKey])
+                'text' => $label . ' ' . ($currentValue == $optionKey ? '✅' : ''),
+                'callback_data' => encodeCallback(self::$type, 'select', [$setting->key, $optionKey]),
             ]);
         }
         if (count($keys) > 0) {
@@ -157,8 +161,8 @@ class BotSettingsFeature
         $replyMarkup->row([
             Keyboard::inlineButton([
                 'text' => __('tbe::general.keys.back'),
-                'callback_data' => encodeCallback(self::$type, 'menu')
-            ])
+                'callback_data' => encodeCallback(self::$type, 'menu'),
+            ]),
         ]);
 
         return new TelegramResponse(
@@ -175,13 +179,14 @@ class BotSettingsFeature
             ->inline();
 
         $currentValue = settings()->get($setting->key);
+        $options = $setting->getOptions();
 
         $keys = [];
-        foreach ($setting->options as $optionKey => $value) {
+        foreach ($options as $optionKey => $value) {
             $exist = in_array($value, $currentValue);
             $keys[] = Keyboard::inlineButton([
                 'text' => $value . ' ' . ($exist ? '✅' : ''),
-                'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey, $exist])
+                'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey, $exist]),
             ]);
         }
         if (count($keys) > 0) {
@@ -192,8 +197,8 @@ class BotSettingsFeature
         $replyMarkup->row([
             Keyboard::inlineButton([
                 'text' => __('tbe::general.keys.back'),
-                'callback_data' => encodeCallback(self::$type, 'menu')
-            ])
+                'callback_data' => encodeCallback(self::$type, 'menu'),
+            ]),
         ]);
 
         return new TelegramResponse(
@@ -206,6 +211,7 @@ class BotSettingsFeature
     {
         $data = explode('.', $depth);
         array_pop($data);
+
         return implode('.', $data);
     }
 }

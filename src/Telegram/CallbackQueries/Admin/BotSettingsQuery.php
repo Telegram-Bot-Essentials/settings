@@ -2,6 +2,7 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\CallbackQueries\Admin;
 
+use Illuminate\Support\Facades\App;
 use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Models\MessageMeta;
 use TelegramBotEssentials\Essence\Telegram\CallbackQueries\CallbackQuery;
@@ -22,7 +23,7 @@ class BotSettingsQuery extends CallbackQuery
     {
         $setting = settings()->getSetting($key);
 
-        $this->answer(__('tbe-settings::bot_settings.messages.editing', ['label' => $setting->label]));
+        $this->answer(__('tbe-settings::bot_settings.messages.editing', ['label' => $setting->getLabel()]));
         switch ($setting->type) {
             case SettingType::CHECKBOX:
                 settings()->set($key, !settings()->get($key));
@@ -34,12 +35,12 @@ class BotSettingsQuery extends CallbackQuery
                 MessageMeta::makeWithCurrentMessage()->deleteMessage();
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
-                    'text' => __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->label]),
+                    'text' => __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()]),
                     'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
                 return;
             case SettingType::ENUM:
-                $x = nextInArray($setting->options ?? [], settings()->get($key));
+                $x = nextInArray($setting->getOptions() ?? [], settings()->get($key));
                 settings()->set($key, $x);
                 break;
             case SettingType::SELECT:
@@ -60,8 +61,12 @@ class BotSettingsQuery extends CallbackQuery
 
     public function select(string $key, string $optionKey): void
     {
-        $setting = settings()->getSetting($key);
-        settings()->set($key, $setting->options[$optionKey] ?? []);
+        settings()->set($key, $optionKey);
+
+        if ($key === 'locale') {
+            App::setLocale($optionKey);
+        }
+
         BotSettingsFeature::menu()->update();
     }
 
@@ -70,9 +75,9 @@ class BotSettingsQuery extends CallbackQuery
         $setting = settings()->getSetting($key);
         $result = settings()->get($key);
         if($remove){
-            $result = array_filter($result, fn($value) => $value != $setting->options[$optionKey] ?? null);
-        }else{
-            $result[] = $setting->options[$optionKey] ?? null;
+            $result = array_filter($result, fn ($value) => $value != ($setting->getOptions()[$optionKey] ?? null));
+        } else {
+            $result[] = $setting->getOptions()[$optionKey] ?? null;
         }
         settings()->set($key, $result);
         BotSettingsFeature::multiselect($setting)->update();

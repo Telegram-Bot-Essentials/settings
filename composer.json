@@ -5,7 +5,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^12",
-        "telegram-bot-essentials/essence": "^0.8"
+        "telegram-bot-essentials/essence": "^0.8.13"
     },
     "license": "MIT",
     "autoload": {

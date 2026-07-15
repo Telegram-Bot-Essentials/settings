@@ -55,7 +55,9 @@ class Settings
                 break;
         }
 
-        if (is_null($value)) $value = $setting->default ?? null;
+        if (is_null($value)) {
+            $value = $setting->default ?? null;
+        }
 
         return $value;
     }
@@ -64,7 +66,7 @@ class Settings
     {
         $setting = $this->settings->get($key);
 
-        if (!$setting) {
+        if (! $setting) {
             throw new TbeException('Setting "' . $key . '" not found');
         }
 
@@ -72,7 +74,7 @@ class Settings
         Validator::validate(
             ['value' => $data],
             ['value' => $rules],
-            attributes: ['value' => $setting->label]
+            attributes: ['value' => $setting->getLabel()]
         );
 
         $botSetting = BotSetting::query()
@@ -96,8 +98,10 @@ class Settings
                 $rules = 'nullable|string';
                 break;
             case SettingType::SELECT:
+                $rules = 'nullable|in:' . implode(',', array_keys($setting->getOptions()));
+                break;
             case SettingType::ENUM:
-                $rules = 'nullable|in:' . implode(',', $setting->options);
+                $rules = 'nullable|in:' . implode(',', $setting->getOptions());
                 break;
             case SettingType::MULTISELECT:
                 $rules = 'nullable|array';
@@ -106,6 +110,7 @@ class Settings
                 $rules = 'nullable|boolean';
                 break;
         }
+
         return $rules;
     }
 

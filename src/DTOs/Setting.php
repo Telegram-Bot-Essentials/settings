@@ -2,28 +2,70 @@
 
 namespace TelegramBotEssentials\Settings\DTOs;
 
+use Closure;
 use TelegramBotEssentials\Essence\Exceptions\TbeException;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 
 class Setting
 {
     public mixed $default;
-    public ?array $options;
+    public array|Closure|null $options;
 
     public function __construct(
-        public string $key, public string $label, public SettingType $type,
-        mixed         $default = null, ?array $options = null, public ?string $description = null
-    )
-    {
+        public string $key,
+        public string|Closure $label,
+        public SettingType $type,
+        mixed $default = null,
+        array|Closure|null $options = null,
+        public string|Closure|null $description = null,
+    ) {
         $this->setDefault($default);
-        $this->setEnums($options);
+        $this->setOptions($options);
+    }
+
+    public function getLabel(): string
+    {
+        return $this->resolveString($this->label);
+    }
+
+    public function getDescription(): ?string
+    {
+        if ($this->description === null) {
+            return null;
+        }
+
+        return $this->resolveString($this->description);
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    public function getOptions(): array
+    {
+        if ($this->options instanceof Closure) {
+            return ($this->options)();
+        }
+
+        return $this->options ?? [];
+    }
+
+    public function getOptionLabel(string|int $optionKey): string
+    {
+        $options = $this->getOptions();
+
+        return (string) ($options[$optionKey] ?? $optionKey);
+    }
+
+    private function resolveString(string|Closure $value): string
+    {
+        return $value instanceof Closure ? $value() : $value;
     }
 
     private function setDefault(mixed $default): void
     {
         if ($this->type == SettingType::CHECKBOX) {
             $allowedValues = [true, false];
-            if (!in_array($default, $allowedValues)) {
+            if (! in_array($default, $allowedValues, true)) {
                 throw new TbeException('Checkbox default value must be true or false');
             }
             $this->default = $default;
@@ -32,13 +74,19 @@ class Setting
         }
     }
 
-    private function setEnums(?array $options)
+    private function setOptions(array|Closure|null $options): void
     {
         switch ($this->type) {
             case SettingType::ENUM:
             case SettingType::SELECT:
             case SettingType::MULTISELECT:
-                if (empty($options)) {
+                if ($options === null) {
+                    throw new TbeException('Options must be provided for setting type: ' . $this->type->value);
+                }
+                if ($options instanceof Closure) {
+                    break;
+                }
+                if ($options === []) {
                     throw new TbeException('Options must be provided for setting type: ' . $this->type->value);
                 }
                 break;
@@ -50,22 +98,23 @@ class Setting
     {
         switch ($this->type) {
             case SettingType::CHECKBOX:
-                return (settings()->get($this->key) ? '✅' : '❌');   // Checkbox — clear visual cue
+                return (settings()->get($this->key) ? '✅' : '❌');
             case SettingType::SENSITIVE:
-                return '🔒';   // Sensitive — lock for security/privacy
+                return '🔒';
             case SettingType::NUMBER:
-                return '🔢';   // Number — perfect numeric representation
+                return '🔢';
             case SettingType::TEXT:
-                return '💬';   // Text — speech bubble for input text
+                return '💬';
             case SettingType::ENUM:
-                return '🧩';   // Enum — puzzle piece for distinct options
+                return '🧩';
             case SettingType::SELECT:
-                return '📋';   // Select — clipboard or list metaphor
+                return '📋';
             case SettingType::MULTISELECT:
-                return '🗃️';  // Multiselect — file box for grouped options
+                return '🗃️';
             case SettingType::DIRECTORY:
-                return '📂';   // Directory — open folder fits perfectly
+                return '📂';
         }
+
         return 'Unknown Setting Type';
     }
 }
