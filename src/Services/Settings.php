@@ -83,7 +83,16 @@ class Settings
                 'key' => $key,
             ]);
 
-        return $this->setValueForType($botSetting, $data ?? $setting->default, $setting->type);
+        $result = $this->setValueForType($botSetting, $data ?? $setting->default, $setting->type);
+
+        tbeLog('settings')->info('Bot setting updated', [
+            'key' => $key,
+            'value' => $setting->type === SettingType::SENSITIVE
+                ? '[redacted]'
+                : (is_scalar($data) ? $data : json_encode($data)),
+        ]);
+
+        return $result;
     }
 
     private function getValidationRuleForType(Setting $setting): string
