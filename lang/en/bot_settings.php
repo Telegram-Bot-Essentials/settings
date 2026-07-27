@@ -14,6 +14,10 @@ return [
     'messages' => [
         'editing' => 'Editing :label...',
         'updated' => ':label updated successfully',
+        'channel_lock' => [
+            'joined' => 'Thanks for joining! You can continue now.',
+            'not_joined' => 'You have not joined the channel yet.',
+        ],
     ],
 
     'prompts' => [
@@ -22,6 +26,21 @@ return [
 
     'locale' => [
         'label' => 'Bot Language',
+    ],
+
+    'channel_lock' => [
+        'label' => 'Channel lock',
+        'status' => [
+            'label' => 'Status',
+        ],
+        'channel_id' => [
+            'label' => 'Channel ID',
+        ],
+        'prompt' => '⛔️ Dear user, you have not joined the channel. Please join to continue',
+        'buttons' => [
+            'join' => 'Join channel ✅',
+            'confirm' => 'I joined ❗️',
+        ],
     ],
 ];
 
