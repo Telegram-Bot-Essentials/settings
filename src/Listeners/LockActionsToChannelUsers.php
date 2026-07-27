@@ -5,6 +5,7 @@ namespace TelegramBotEssentials\Settings\Listeners;
 use Telegram\Bot\Keyboard\Keyboard;
 use TelegramBotEssentials\Essence\Events\BotUpdateReceived;
 use TelegramBotEssentials\Essence\Telegram\TelegramResponse;
+use TelegramBotEssentials\Settings\Services\ChannelMembership;
 use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Member\ChannelLockQuery;
 
 class LockActionsToChannelUsers
@@ -14,19 +15,21 @@ class LockActionsToChannelUsers
         if (hasAccess()) return;
         if (!settings()->get('channel_lock.status')) return;
         $channelId = ltrim(settings()->get('channel_lock.channel_id'), '@');
-        if (!$channelId) return;
-
-        try {
-            $chatMember = wHook()->api()->getChatMember([
-                'chat_id' => '@' . $channelId,
-                'user_id' => wHook()->user()->telegram_user_peer_id,
-            ]);
-        } catch (\Exception) {
+        if (!$channelId) {
+            tbeLog('settings')->warning('Channel lock enabled without a channel_id configured');
             return;
         }
 
+        $isMember = app(ChannelMembership::class)->isMember($channelId);
+
+        if (!$isMember) {
+            tbeLog('settings')->debug('Channel lock: blocked user pending channel join', [
+                'channel_id' => $channelId,
+            ]);
+        }
+
         dependsOn(
-            in_array($chatMember->status, ChannelLockQuery::JOINED_STATUSES),
+            $isMember,
             new TelegramResponse(
                 text: __('tbe-settings::bot_settings.channel_lock.prompt'),
                 replyMarkup: Keyboard::make()

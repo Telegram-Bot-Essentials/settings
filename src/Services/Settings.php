@@ -3,6 +3,7 @@
 namespace TelegramBotEssentials\Settings\Services;
 
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use TelegramBotEssentials\Essence\Exceptions\TbeException;
 use TelegramBotEssentials\Settings\DTOs\Setting;
@@ -35,31 +36,33 @@ class Settings
 
     public function get(string $key): mixed
     {
-        $setting = $this->settings->get($key);
-        $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
-            ->firstOrCreate(['key' => $key]);
+        return Cache::rememberForever($this->cacheKey($key), function () use ($key) {
+            $setting = $this->settings->get($key);
+            $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
+                ->firstOrCreate(['key' => $key]);
 
-        switch ($setting->type) {
-            case SettingType::CHECKBOX:
-            case SettingType::SELECT:
-            case SettingType::ENUM:
-            case SettingType::NUMBER:
-            case SettingType::TEXT:
-                $value = $botSetting->value;
-                break;
-            case SettingType::SENSITIVE:
-                $value = $botSetting->value == null ? null : decrypt($botSetting->value);
-                break;
-            case SettingType::MULTISELECT:
-                $value = $botSetting->value == null ? ($setting->default ?? []) : explode(',', $botSetting->value);
-                break;
-        }
+            switch ($setting->type) {
+                case SettingType::CHECKBOX:
+                case SettingType::SELECT:
+                case SettingType::ENUM:
+                case SettingType::NUMBER:
+                case SettingType::TEXT:
+                    $value = $botSetting->value;
+                    break;
+                case SettingType::SENSITIVE:
+                    $value = $botSetting->value == null ? null : decrypt($botSetting->value);
+                    break;
+                case SettingType::MULTISELECT:
+                    $value = $botSetting->value == null ? ($setting->default ?? []) : explode(',', $botSetting->value);
+                    break;
+            }
 
-        if (is_null($value)) {
-            $value = $setting->default ?? null;
-        }
+            if (is_null($value)) {
+                $value = $setting->default ?? null;
+            }
 
-        return $value;
+            return $value;
+        });
     }
 
     public function set(string $key, mixed $data): mixed
@@ -85,6 +88,8 @@ class Settings
 
         $result = $this->setValueForType($botSetting, $data ?? $setting->default, $setting->type);
 
+        Cache::forget($this->cacheKey($key));
+
         tbeLog('settings')->info('Bot setting updated', [
             'key' => $key,
             'value' => $setting->type === SettingType::SENSITIVE
@@ -93,6 +98,11 @@ class Settings
         ]);
 
         return $result;
+    }
+
+    private function cacheKey(string $key): string
+    {
+        return 'settings:' . wHook()->bot()->id . ':' . $key;
     }
 
     private function getValidationRuleForType(Setting $setting): string

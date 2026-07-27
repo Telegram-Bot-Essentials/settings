@@ -11,6 +11,7 @@ use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Listeners\LockActionsToChannelUsers;
 use TelegramBotEssentials\Settings\Listeners\SetBotLocale;
+use TelegramBotEssentials\Settings\Services\ChannelMembership;
 use TelegramBotEssentials\Settings\Services\LocaleRegistry;
 use TelegramBotEssentials\Settings\Services\Settings;
 use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Admin\BotSettingsQuery;
@@ -23,6 +24,7 @@ class TbeSettingsServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Settings::class, fn () => new Settings());
         $this->app->singleton(LocaleRegistry::class);
+        $this->app->singleton(ChannelMembership::class);
     }
 
     /**
