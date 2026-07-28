@@ -12,8 +12,14 @@ class LockActionsToChannelUsers
 {
     public function handle(BotUpdateReceived $event): void
     {
-        if (hasAccess()) return;
-        if (!settings()->get('channel_lock.status')) return;
+        if (hasAccess()) {
+            tbeLog('settings')->debug('Channel lock: skipped, user has access');
+            return;
+        }
+        if (!settings()->get('channel_lock.status')) {
+            tbeLog('settings')->debug('Channel lock: skipped, feature disabled');
+            return;
+        }
         $channelId = ltrim(settings()->get('channel_lock.channel_id'), '@');
         if (!$channelId) {
             tbeLog('settings')->warning('Channel lock enabled without a channel_id configured');
