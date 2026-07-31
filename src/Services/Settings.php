@@ -38,8 +38,10 @@ class Settings
     {
         return Cache::rememberForever($this->cacheKey($key), function () use ($key) {
             $setting = $this->settings->get($key);
-            $botSetting = BotSetting::where('bot_id', wHook()->bot()->id)
-                ->firstOrCreate(['key' => $key]);
+            $botSetting = BotSetting::firstOrCreate([
+                'bot_id' => wHook()->bot()->id,
+                'key' => $key,
+            ]);
 
             switch ($setting->type) {
                 case SettingType::CHECKBOX:
