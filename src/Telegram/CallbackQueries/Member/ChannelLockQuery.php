@@ -32,5 +32,6 @@ class ChannelLockQuery extends CallbackQuery
 
         MessageMeta::makeWithCurrentMessage()->deleteMessage();
         $this->answer(__('tbe-settings::bot_settings.messages.channel_lock.joined'));
+        commandBus()->route('start');
     }
 }
