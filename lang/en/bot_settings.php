@@ -35,6 +35,7 @@ return [
         ],
         'channel_id' => [
             'label' => 'Channel ID',
+            'bot_not_admin' => 'The bot is not an admin of that channel. Please add the bot as an admin first, then try again.',
         ],
         'prompt' => '⛔️ Dear user, you have not joined the channel. Please join to continue',
         'buttons' => [

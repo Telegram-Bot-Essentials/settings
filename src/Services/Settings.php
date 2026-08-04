@@ -75,12 +75,17 @@ class Settings
             throw new TbeException('Setting "' . $key . '" not found');
         }
 
-        $rules = $this->getValidationRuleForType($setting);
+        $rules = [...explode('|', $this->getValidationRuleForType($setting)), ...$setting->getRules()];
         Validator::validate(
             ['value' => $data],
             ['value' => $rules],
             attributes: ['value' => $setting->getLabel()]
         );
+
+        $hasHooks = $setting->beforeSet !== null || $setting->afterSet !== null;
+        $oldValue = $hasHooks ? $this->get($key) : null;
+
+        $data = $setting->callBeforeSet($data, $oldValue);
 
         $botSetting = BotSetting::query()
             ->firstOrCreate([
@@ -98,6 +103,17 @@ class Settings
                 ? '[redacted]'
                 : (is_scalar($data) ? $data : json_encode($data)),
         ]);
+
+        if ($hasHooks) {
+            try {
+                $setting->callAfterSet($this->get($key), $oldValue);
+            } catch (\Throwable $e) {
+                tbeLog('settings')->error('Setting afterSet hook failed', [
+                    'key' => $key,
+                    'exception' => $e,
+                ]);
+            }
+        }
 
         return $result;
     }
