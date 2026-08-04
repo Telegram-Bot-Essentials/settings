@@ -61,25 +61,29 @@ class TbeSettingsServiceProvider extends ServiceProvider
             type: SettingType::SELECT,
             default: config('app.locale'),
             options: fn () => app(LocaleRegistry::class)->selectOptions(),
+            description: fn () => __('tbe-settings::bot_settings.locale.description'),
         ));
 
         settings()->addSetting(new Setting(
             key: 'channel_lock',
             label: fn () => __('tbe-settings::bot_settings.channel_lock.label'),
             type: SettingType::DIRECTORY,
+            description: fn () => __('tbe-settings::bot_settings.channel_lock.description'),
         ));
 
         settings()->addSetting(new Setting(
             key: 'channel_lock.status',
             label: fn () => __('tbe-settings::bot_settings.channel_lock.status.label'),
             type: SettingType::CHECKBOX,
-            default: false
+            default: false,
+            description: fn () => __('tbe-settings::bot_settings.channel_lock.status.description'),
         ));
 
         settings()->addSetting(new Setting(
             key: 'channel_lock.channel_id',
             label: fn () => __('tbe-settings::bot_settings.channel_lock.channel_id.label'),
             type: SettingType::TEXT,
+            description: fn () => __('tbe-settings::bot_settings.channel_lock.channel_id.description'),
         ));
     }
 

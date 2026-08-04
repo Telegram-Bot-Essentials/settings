@@ -33,9 +33,13 @@ class BotSettingsQuery extends CallbackQuery
             case SettingType::TEXT:
                 wHook()->user()->changeState(encodeAnswerState($this->type, 'update', ["key" => $key]));
                 MessageMeta::makeWithCurrentMessage()->deleteMessage();
+                $text = $setting->getDescription() !== null
+                    ? '<i>' . $setting->getDescription() . '</i>' . "\r\n\r\n" . __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()])
+                    : __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()]);
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
-                    'text' => __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()]),
+                    'text' => $text,
+                    'parse_mode' => 'HTML',
                     'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
                 return;

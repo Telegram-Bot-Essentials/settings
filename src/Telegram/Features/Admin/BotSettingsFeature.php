@@ -18,16 +18,24 @@ class BotSettingsFeature
             $depth = null;
         }
 
-        $text = __('tbe-settings::bot_settings.menu.title');
-
-        $replyMarkup = Keyboard::make()
-            ->inline();
-
         if (settings()->getSettings()->isEmpty()) {
             return new TelegramResponse(
                 text: __('tbe-settings::bot_settings.menu.empty'),
             );
         }
+
+        $directorySetting = $depth ? settings()->getSetting($depth) : null;
+
+        $text = $directorySetting
+            ? '<b>' . $directorySetting->getLabel() . '</b>'
+            : __('tbe-settings::bot_settings.menu.title');
+
+        if ($directorySetting && $directorySetting->getDescription() !== null) {
+            $text .= "\r\n" . '<i>' . $directorySetting->getDescription() . '</i>';
+        }
+
+        $replyMarkup = Keyboard::make()
+            ->inline();
 
         $notSet = __('tbe::general.status.notSet');
         $NA = "<u>{$notSet}</u>";
@@ -63,10 +71,14 @@ class BotSettingsFeature
             if ($key) {
                 $keys[] = $key;
             }
+            if ($setting->type === SettingType::DIRECTORY) {
+                if ($setting->getDescription() !== null) {
+                    $text .= '<b>' . $setting->getLabel() . '</b>' . "\r\n";
+                    $text .= '  <i>' . $setting->getDescription() . '</i>' . "\r\n";
+                }
+                return;
+            }
             switch ($setting->type) {
-                case SettingType::DIRECTORY:
-                    $value = null;
-                    break;
                 case SettingType::CHECKBOX:
                     $value = settings()->get($setting->key)
                         ? __('tbe::general.status.enabled')
@@ -138,7 +150,7 @@ class BotSettingsFeature
 
     public static function select(Setting $setting): TelegramResponse
     {
-        $text = __('tbe-settings::bot_settings.selectors.no_options');
+        $body = __('tbe-settings::bot_settings.selectors.no_options');
 
         $replyMarkup = Keyboard::make()
             ->inline();
@@ -154,7 +166,7 @@ class BotSettingsFeature
             ]);
         }
         if (count($keys) > 0) {
-            $text = __('tbe-settings::bot_settings.selectors.prompt');
+            $body = __('tbe-settings::bot_settings.selectors.prompt');
         }
         addInlineKeysSmartSorted($replyMarkup, $keys, 2);
 
@@ -166,14 +178,15 @@ class BotSettingsFeature
         ]);
 
         return new TelegramResponse(
-            text: $text,
+            text: self::promptHeader($setting) . "\r\n\r\n" . $body,
             replyMarkup: $replyMarkup,
+            parseMode: 'HTML',
         );
     }
 
     public static function multiselect(Setting $setting)
     {
-        $text = __('tbe-settings::bot_settings.selectors.no_options');
+        $body = __('tbe-settings::bot_settings.selectors.no_options');
 
         $replyMarkup = Keyboard::make()
             ->inline();
@@ -190,7 +203,7 @@ class BotSettingsFeature
             ]);
         }
         if (count($keys) > 0) {
-            $text = __('tbe-settings::bot_settings.selectors.prompt');
+            $body = __('tbe-settings::bot_settings.selectors.prompt');
         }
         addInlineKeysSmartSorted($replyMarkup, $keys, 2);
 
@@ -202,9 +215,21 @@ class BotSettingsFeature
         ]);
 
         return new TelegramResponse(
-            text: $text,
+            text: self::promptHeader($setting) . "\r\n\r\n" . $body,
             replyMarkup: $replyMarkup,
+            parseMode: 'HTML',
         );
+    }
+
+    private static function promptHeader(Setting $setting): string
+    {
+        $header = '<b>' . $setting->getLabel() . '</b>';
+
+        if ($setting->getDescription() !== null) {
+            $header .= "\r\n" . '<i>' . $setting->getDescription() . '</i>';
+        }
+
+        return $header;
     }
 
     private static function cropLastDepth(string $depth): string
