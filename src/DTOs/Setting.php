@@ -18,6 +18,9 @@ class Setting
         mixed $default = null,
         array|Closure|null $options = null,
         public string|Closure|null $description = null,
+        public ?Closure $beforeSet = null,
+        public ?Closure $afterSet = null,
+        public string|array|Closure|null $rules = null,
     ) {
         $this->setDefault($default);
         $this->setOptions($options);
@@ -54,6 +57,38 @@ class Setting
         $options = $this->getOptions();
 
         return (string) ($options[$optionKey] ?? $optionKey);
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    public function getRules(): array
+    {
+        $rules = $this->rules instanceof Closure ? ($this->rules)() : $this->rules;
+
+        return match (true) {
+            $rules === null => [],
+            is_array($rules) => $rules,
+            default => explode('|', $rules),
+        };
+    }
+
+    public function callBeforeSet(mixed $value, mixed $oldValue): mixed
+    {
+        if ($this->beforeSet === null) {
+            return $value;
+        }
+
+        return ($this->beforeSet)($value, $oldValue, $this);
+    }
+
+    public function callAfterSet(mixed $newValue, mixed $oldValue): void
+    {
+        if ($this->afterSet === null) {
+            return;
+        }
+
+        ($this->afterSet)($newValue, $oldValue, $this);
     }
 
     private function resolveString(string|Closure $value): string

@@ -7,6 +7,7 @@ use Illuminate\Support\ServiceProvider;
 use TelegramBotEssentials\Essence\Events\BotUpdateReceived;
 use TelegramBotEssentials\Essence\Events\BotWebhookInitialized;
 use TelegramBotEssentials\Essence\Exceptions\LogicException;
+use TelegramBotEssentials\Essence\Exceptions\TbeLogicException;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Listeners\LockActionsToChannelUsers;
@@ -84,6 +85,18 @@ class TbeSettingsServiceProvider extends ServiceProvider
             label: fn () => __('tbe-settings::bot_settings.channel_lock.channel_id.label'),
             type: SettingType::TEXT,
             description: fn () => __('tbe-settings::bot_settings.channel_lock.channel_id.description'),
+            beforeSet: function (mixed $value) {
+                if (! $value) {
+                    return $value;
+                }
+
+                $channelId = ltrim($value, '@');
+                if (! app(ChannelMembership::class)->isBotAdmin($channelId)) {
+                    throw new TbeLogicException(__('tbe-settings::bot_settings.channel_lock.channel_id.bot_not_admin'));
+                }
+
+                return $value;
+            },
         ));
     }
 
