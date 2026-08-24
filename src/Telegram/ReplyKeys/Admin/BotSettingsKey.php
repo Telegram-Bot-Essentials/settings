@@ -9,13 +9,9 @@ use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
 
 class BotSettingsKey extends ReplyKey
 {
-    protected string $text;
+    protected string $textKey = 'tbe::bot_settings.reply_key';
     protected int $perm = Roles::ADMIN->value;
 
-    public function __construct()
-    {
-        $this->text = __('tbe::bot_settings.reply_key');
-    }
 
     /**
      * @throws TelegramSDKException
