@@ -6,6 +6,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
 use TelegramBotEssentials\Essence\Exceptions\TbeException;
+use TelegramBotEssentials\Essence\Models\Bot;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Models\BotSetting;
@@ -34,12 +35,20 @@ class Settings
         return $this->settings->get($key);
     }
 
-    public function get(string $key): mixed
+    /**
+     * $bot defaults to the ambient webhook-context bot, since every existing
+     * call site only ever runs inside a real webhook request. Pass it
+     * explicitly from anywhere else (a console command, a queued job) that
+     * has no webhook context to read it from.
+     */
+    public function get(string $key, ?Bot $bot = null): mixed
     {
-        return Cache::rememberForever($this->cacheKey($key), function () use ($key) {
+        $bot ??= wHook()->bot();
+
+        return Cache::rememberForever($this->cacheKey($key, $bot), function () use ($key, $bot) {
             $setting = $this->settings->get($key);
             $botSetting = BotSetting::firstOrCreate([
-                'bot_id' => wHook()->bot()->id,
+                'bot_id' => $bot->id,
                 'key' => $key,
             ]);
 
@@ -67,8 +76,10 @@ class Settings
         });
     }
 
-    public function set(string $key, mixed $data): mixed
+    public function set(string $key, mixed $data, ?Bot $bot = null): mixed
     {
+        $bot ??= wHook()->bot();
+
         $setting = $this->settings->get($key);
 
         if (! $setting) {
@@ -83,19 +94,19 @@ class Settings
         );
 
         $hasHooks = $setting->beforeSet !== null || $setting->afterSet !== null;
-        $oldValue = $hasHooks ? $this->get($key) : null;
+        $oldValue = $hasHooks ? $this->get($key, $bot) : null;
 
         $data = $setting->callBeforeSet($data, $oldValue);
 
         $botSetting = BotSetting::query()
             ->firstOrCreate([
-                'bot_id' => wHook()->bot()->id,
+                'bot_id' => $bot->id,
                 'key' => $key,
             ]);
 
         $result = $this->setValueForType($botSetting, $data ?? $setting->default, $setting->type);
 
-        Cache::forget($this->cacheKey($key));
+        Cache::forget($this->cacheKey($key, $bot));
 
         tbeLog('settings')->info('Bot setting updated', [
             'key' => $key,
@@ -106,7 +117,7 @@ class Settings
 
         if ($hasHooks) {
             try {
-                $setting->callAfterSet($this->get($key), $oldValue);
+                $setting->callAfterSet($this->get($key, $bot), $oldValue);
             } catch (\Throwable $e) {
                 tbeLog('settings')->error('Setting afterSet hook failed', [
                     'key' => $key,
@@ -118,9 +129,9 @@ class Settings
         return $result;
     }
 
-    private function cacheKey(string $key): string
+    private function cacheKey(string $key, Bot $bot): string
     {
-        return 'settings:' . wHook()->bot()->id . ':' . $key;
+        return 'settings:' . $bot->id . ':' . $key;
     }
 
     private function getValidationRuleForType(Setting $setting): string
