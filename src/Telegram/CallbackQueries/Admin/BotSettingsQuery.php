@@ -12,6 +12,7 @@ use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
 class BotSettingsQuery extends CallbackQuery
 {
     protected string $type = 'BTSTNG';
+
     protected int $perm = Roles::ADMIN->value;
 
     public function menu(?string $depth = null): void
@@ -26,15 +27,15 @@ class BotSettingsQuery extends CallbackQuery
         $this->answer(__('tbe-settings::bot_settings.messages.editing', ['label' => $setting->getLabel()]));
         switch ($setting->type) {
             case SettingType::CHECKBOX:
-                settings()->set($key, !settings()->get($key));
+                settings()->set($key, ! settings()->get($key));
                 break;
             case SettingType::SENSITIVE:
             case SettingType::NUMBER:
             case SettingType::TEXT:
-                wHook()->user()->changeState(encodeAnswerState($this->type, 'update', ["key" => $key]));
+                wHook()->user()->changeState(encodeAnswerState($this->type, 'update', ['key' => $key]));
                 MessageMeta::makeWithCurrentMessage()->deleteMessage();
                 $text = $setting->getDescription() !== null
-                    ? '<i>' . $setting->getDescription() . '</i>' . "\r\n\r\n" . __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()])
+                    ? '<i>'.$setting->getDescription().'</i>'."\r\n\r\n".__('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()])
                     : __('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()]);
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
@@ -42,6 +43,7 @@ class BotSettingsQuery extends CallbackQuery
                     'parse_mode' => 'HTML',
                     'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
+
                 return;
             case SettingType::ENUM:
                 $x = nextInArray($setting->getOptions() ?? [], settings()->get($key));
@@ -78,7 +80,7 @@ class BotSettingsQuery extends CallbackQuery
     {
         $setting = settings()->getSetting($key);
         $result = settings()->get($key);
-        if($remove){
+        if ($remove) {
             $result = array_filter($result, fn ($value) => $value != ($setting->getOptions()[$optionKey] ?? null));
         } else {
             $result[] = $setting->getOptions()[$optionKey] ?? null;

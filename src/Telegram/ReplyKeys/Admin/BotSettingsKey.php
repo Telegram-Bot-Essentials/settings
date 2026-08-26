@@ -2,9 +2,9 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\ReplyKeys\Admin;
 
+use Telegram\Bot\Exceptions\TelegramSDKException;
 use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Telegram\ReplyKeys\ReplyKey;
-use Telegram\Bot\Exceptions\TelegramSDKException;
 use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
 
 class BotSettingsKey extends ReplyKey

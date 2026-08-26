@@ -2,17 +2,18 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\CallbackQueries\Member;
 
+use Telegram\Bot\Exceptions\TelegramSDKException;
 use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Models\MessageMeta;
 use TelegramBotEssentials\Essence\Telegram\CallbackQueries\CallbackQuery;
 use TelegramBotEssentials\Settings\Services\ChannelMembership;
-use Telegram\Bot\Exceptions\TelegramSDKException;
 
 class ChannelLockQuery extends CallbackQuery
 {
     public const TYPE = 'CHLOCK';
 
     protected string $type = self::TYPE;
+
     protected int $perm = Roles::MEMBER->value;
 
     /**
@@ -22,7 +23,7 @@ class ChannelLockQuery extends CallbackQuery
     {
         $channelId = ltrim(settings()->get('channel_lock.channel_id'), '@');
 
-        if (!app(ChannelMembership::class)->isMember($channelId)) {
+        if (! app(ChannelMembership::class)->isMember($channelId)) {
             tbeLog('settings')->debug('Channel lock: re-check still not joined', [
                 'channel_id' => $channelId,
             ]);
@@ -31,6 +32,7 @@ class ChannelLockQuery extends CallbackQuery
                 'text' => __('tbe-settings::bot_settings.messages.channel_lock.not_joined'),
                 'show_alert' => true,
             ]);
+
             return;
         }
 

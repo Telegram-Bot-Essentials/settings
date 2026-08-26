@@ -2,7 +2,6 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\StateAnswers\Admin;
 
-use Illuminate\Support\Facades\Validator;
 use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Telegram\StateAnswers\StateAnswer;
 use TelegramBotEssentials\Settings\Enums\SettingType;
@@ -11,9 +10,10 @@ use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
 class BotSettingsAnswer extends StateAnswer
 {
     protected string $type = 'BTSTNG';
+
     protected int $perm = Roles::ADMIN->value;
 
-    function update(string $key): void
+    public function update(string $key): void
     {
         $setting = settings()->getSetting($key);
 
@@ -26,7 +26,7 @@ class BotSettingsAnswer extends StateAnswer
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
                     'text' => __('tbe-settings::bot_settings.messages.updated', ['label' => $setting->getLabel()]),
-                    'reply_markup' => wHook()->user()->getKeyboard()
+                    'reply_markup' => wHook()->user()->getKeyboard(),
                 ]);
                 break;
         }
@@ -35,10 +35,10 @@ class BotSettingsAnswer extends StateAnswer
     }
 
     // TODO: it can improved by adding support of different cancellation keys, so we will be able to cancel or delete the setting by choosing the right key
-    function cancel(): void
+    public function cancel(): void
     {
         $key = $this->params['key'] ?? null;
-        if($key){
+        if ($key) {
             settings()->set($key, null);
         }
 
@@ -47,7 +47,7 @@ class BotSettingsAnswer extends StateAnswer
 
     private function extractDepthFromKey(?string $key): ?string
     {
-        if (!$key || !str_contains($key, '.')) {
+        if (! $key || ! str_contains($key, '.')) {
             return null;
         }
 

@@ -9,6 +9,7 @@ use TelegramBotEssentials\Settings\Enums\SettingType;
 class Setting
 {
     public mixed $default;
+
     public array|Closure|null $options;
 
     public function __construct(
@@ -116,13 +117,13 @@ class Setting
             case SettingType::SELECT:
             case SettingType::MULTISELECT:
                 if ($options === null) {
-                    throw new TbeException('Options must be provided for setting type: ' . $this->type->value);
+                    throw new TbeException('Options must be provided for setting type: '.$this->type->value);
                 }
                 if ($options instanceof Closure) {
                     break;
                 }
                 if ($options === []) {
-                    throw new TbeException('Options must be provided for setting type: ' . $this->type->value);
+                    throw new TbeException('Options must be provided for setting type: '.$this->type->value);
                 }
                 break;
         }
@@ -133,7 +134,7 @@ class Setting
     {
         switch ($this->type) {
             case SettingType::CHECKBOX:
-                return (settings()->get($this->key) ? '✅' : '❌');
+                return settings()->get($this->key) ? '✅' : '❌';
             case SettingType::SENSITIVE:
                 return '🔒';
             case SettingType::NUMBER:

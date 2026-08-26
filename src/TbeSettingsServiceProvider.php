@@ -23,7 +23,7 @@ class TbeSettingsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(Settings::class, fn () => new Settings());
+        $this->app->singleton(Settings::class, fn () => new Settings);
         $this->app->singleton(LocaleRegistry::class);
         $this->app->singleton(ChannelMembership::class);
     }
@@ -36,8 +36,8 @@ class TbeSettingsServiceProvider extends ServiceProvider
     {
         $this->registerPublishing();
 
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'tbe-settings');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadTranslationsFrom(__DIR__.'/../lang', 'tbe-settings');
 
         // In boot(): every provider's register() runs before any provider's
         // boot(), so this always overrides essence's own register()-phase
@@ -108,7 +108,7 @@ class TbeSettingsServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../lang' => resource_path('lang/vendor/tbe-settings'),
+                __DIR__.'/../lang' => resource_path('lang/vendor/tbe-settings'),
             ], 'tbe-settings-translations');
         }
     }

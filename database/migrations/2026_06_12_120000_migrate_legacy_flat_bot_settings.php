@@ -6,7 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use TelegramBotEssentials\Essence\Models\Bot;
 
-return new class extends Migration {
+return new class extends Migration
+{
     private const LEGACY_COLUMN_MAP = [
         'bot_status' => 'bot.status',
         'language' => 'bot.language',
@@ -25,7 +26,7 @@ return new class extends Migration {
 
     public function up(): void
     {
-        if (!Schema::hasTable('bot_settings') || !Schema::hasColumn('bot_settings', 'bot_status')) {
+        if (! Schema::hasTable('bot_settings') || ! Schema::hasColumn('bot_settings', 'bot_status')) {
             return;
         }
 
@@ -54,7 +55,7 @@ return new class extends Migration {
 
         foreach ($legacyRows as $row) {
             foreach (self::LEGACY_COLUMN_MAP as $column => $key) {
-                if (!isset($row->{$column}) || $row->{$column} === null) {
+                if (! isset($row->{$column}) || $row->{$column} === null) {
                     continue;
                 }
 
@@ -102,7 +103,7 @@ return new class extends Migration {
 
     public function down(): void
     {
-        if (!Schema::hasTable('bot_settings') || Schema::hasColumn('bot_settings', 'bot_status')) {
+        if (! Schema::hasTable('bot_settings') || Schema::hasColumn('bot_settings', 'bot_status')) {
             return;
         }
 

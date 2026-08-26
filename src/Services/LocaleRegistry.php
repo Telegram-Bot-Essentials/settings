@@ -29,7 +29,7 @@ class LocaleRegistry
         $stats = $this->cachedStats();
 
         foreach ($this->supportedLocales() as $locale) {
-            $label = Lang::get('tbe-settings::locales.' . $locale, [], $locale);
+            $label = Lang::get('tbe-settings::locales.'.$locale, [], $locale);
             $localeStats = $stats['locales'][$locale] ?? null;
 
             if ($localeStats) {

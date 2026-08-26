@@ -18,7 +18,7 @@ class ChannelMembership
 
         try {
             $chatMember = wHook()->api()->getChatMember([
-                'chat_id' => '@' . $channelId,
+                'chat_id' => '@'.$channelId,
                 'user_id' => wHook()->user()->telegram_user_peer_id,
             ]);
         } catch (\Exception $e) {
@@ -49,7 +49,7 @@ class ChannelMembership
 
         try {
             $chatMember = wHook()->api()->getChatMember([
-                'chat_id' => '@' . $channelId,
+                'chat_id' => '@'.$channelId,
                 'user_id' => wHook()->api()->getMe()->id,
             ]);
         } catch (\Exception $e) {
@@ -72,11 +72,11 @@ class ChannelMembership
 
     private function cacheKey(string $channelId): string
     {
-        return 'channel_membership:' . wHook()->bot()->id . ':' . $channelId . ':' . wHook()->user()->telegram_user_peer_id;
+        return 'channel_membership:'.wHook()->bot()->id.':'.$channelId.':'.wHook()->user()->telegram_user_peer_id;
     }
 
     private function botAdminCacheKey(string $channelId): string
     {
-        return 'channel_bot_admin:' . wHook()->bot()->id . ':' . $channelId;
+        return 'channel_bot_admin:'.wHook()->bot()->id.':'.$channelId;
     }
 }

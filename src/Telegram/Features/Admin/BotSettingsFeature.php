@@ -10,7 +10,7 @@ use TelegramBotEssentials\Settings\Enums\SettingType;
 
 class BotSettingsFeature
 {
-    static string $type = 'BTSTNG';
+    public static string $type = 'BTSTNG';
 
     public static function menu(?string $depth = null): TelegramResponse
     {
@@ -27,11 +27,11 @@ class BotSettingsFeature
         $directorySetting = $depth ? settings()->getSetting($depth) : null;
 
         $text = $directorySetting
-            ? '<b>' . $directorySetting->getLabel() . '</b>'
+            ? '<b>'.$directorySetting->getLabel().'</b>'
             : __('tbe-settings::bot_settings.menu.title');
 
         if ($directorySetting && $directorySetting->getDescription() !== null) {
-            $text .= "\r\n" . '<i>' . $directorySetting->getDescription() . '</i>';
+            $text .= "\r\n".'<i>'.$directorySetting->getDescription().'</i>';
         }
 
         $replyMarkup = Keyboard::make()
@@ -73,9 +73,10 @@ class BotSettingsFeature
             }
             if ($setting->type === SettingType::DIRECTORY) {
                 if ($setting->getDescription() !== null) {
-                    $text .= '<b>' . $setting->getLabel() . '</b>' . "\r\n";
-                    $text .= '  <i>' . $setting->getDescription() . '</i>' . "\r\n";
+                    $text .= '<b>'.$setting->getLabel().'</b>'."\r\n";
+                    $text .= '  <i>'.$setting->getDescription().'</i>'."\r\n";
                 }
+
                 return;
             }
             switch ($setting->type) {
@@ -85,7 +86,7 @@ class BotSettingsFeature
                         : __('tbe::general.status.disabled');
                     break;
                 case SettingType::SENSITIVE:
-                    $value = settings()->get($setting->key) ? '<tg-spoiler>' . (settings()->get($setting->key)) . '</tg-spoiler>' : $NA;
+                    $value = settings()->get($setting->key) ? '<tg-spoiler>'.(settings()->get($setting->key)).'</tg-spoiler>' : $NA;
                     break;
                 case SettingType::MULTISELECT:
                     $value = settings()->get($setting->key) ? implode(', ', settings()->get($setting->key) ?? []) : $NA;
@@ -101,7 +102,7 @@ class BotSettingsFeature
                     break;
             }
             if (isset($value)) {
-                $text .= '<b>' . $setting->getLabel() . '</b>: <i>' . $value . '</i>';
+                $text .= '<b>'.$setting->getLabel().'</b>: <i>'.$value.'</i>';
                 $text .= "\r\n";
             }
         });
@@ -132,17 +133,17 @@ class BotSettingsFeature
         switch ($setting->type) {
             case SettingType::DIRECTORY:
                 return Keyboard::inlineButton([
-                    'text' => $setting->getLabel() . ' ' . $setting->getTypeEmoji(),
+                    'text' => $setting->getLabel().' '.$setting->getTypeEmoji(),
                     'callback_data' => encodeCallback(self::$type, 'menu', [$setting->key]),
                 ]);
             case SettingType::ENUM:
                 return Keyboard::inlineButton([
-                    'text' => $setting->getTypeEmoji() . ' ' . $setting->getLabel() . ': ' . (settings()->get($setting->key) ?? __('tbe::general.status.notSet')),
+                    'text' => $setting->getTypeEmoji().' '.$setting->getLabel().': '.(settings()->get($setting->key) ?? __('tbe::general.status.notSet')),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key]),
                 ]);
             default:
                 return Keyboard::inlineButton([
-                    'text' => $setting->getLabel() . ' ' . $setting->getTypeEmoji(),
+                    'text' => $setting->getLabel().' '.$setting->getTypeEmoji(),
                     'callback_data' => encodeCallback(self::$type, 'update', [$setting->key]),
                 ]);
         }
@@ -161,7 +162,7 @@ class BotSettingsFeature
         $keys = [];
         foreach ($options as $optionKey => $label) {
             $keys[] = Keyboard::inlineButton([
-                'text' => $label . ' ' . ($currentValue == $optionKey ? '✅' : ''),
+                'text' => $label.' '.($currentValue == $optionKey ? '✅' : ''),
                 'callback_data' => encodeCallback(self::$type, 'select', [$setting->key, $optionKey]),
             ]);
         }
@@ -178,7 +179,7 @@ class BotSettingsFeature
         ]);
 
         return new TelegramResponse(
-            text: self::promptHeader($setting) . "\r\n\r\n" . $body,
+            text: self::promptHeader($setting)."\r\n\r\n".$body,
             replyMarkup: $replyMarkup,
             parseMode: 'HTML',
         );
@@ -198,7 +199,7 @@ class BotSettingsFeature
         foreach ($options as $optionKey => $value) {
             $exist = in_array($value, $currentValue);
             $keys[] = Keyboard::inlineButton([
-                'text' => $value . ' ' . ($exist ? '✅' : ''),
+                'text' => $value.' '.($exist ? '✅' : ''),
                 'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey, $exist]),
             ]);
         }
@@ -215,7 +216,7 @@ class BotSettingsFeature
         ]);
 
         return new TelegramResponse(
-            text: self::promptHeader($setting) . "\r\n\r\n" . $body,
+            text: self::promptHeader($setting)."\r\n\r\n".$body,
             replyMarkup: $replyMarkup,
             parseMode: 'HTML',
         );
@@ -223,10 +224,10 @@ class BotSettingsFeature
 
     private static function promptHeader(Setting $setting): string
     {
-        $header = '<b>' . $setting->getLabel() . '</b>';
+        $header = '<b>'.$setting->getLabel().'</b>';
 
         if ($setting->getDescription() !== null) {
-            $header .= "\r\n" . '<i>' . $setting->getDescription() . '</i>';
+            $header .= "\r\n".'<i>'.$setting->getDescription().'</i>';
         }
 
         return $header;

@@ -14,21 +14,24 @@ class LockActionsToChannelUsers
     {
         if (hasAccess()) {
             tbeLog('settings')->debug('Channel lock: skipped, user has access');
+
             return;
         }
-        if (!settings()->get('channel_lock.status')) {
+        if (! settings()->get('channel_lock.status')) {
             tbeLog('settings')->debug('Channel lock: skipped, feature disabled');
+
             return;
         }
         $channelId = ltrim(settings()->get('channel_lock.channel_id'), '@');
-        if (!$channelId) {
+        if (! $channelId) {
             tbeLog('settings')->warning('Channel lock enabled without a channel_id configured');
+
             return;
         }
 
         $isMember = app(ChannelMembership::class)->isMember($channelId);
 
-        if (!$isMember) {
+        if (! $isMember) {
             tbeLog('settings')->debug('Channel lock: blocked user pending channel join', [
                 'channel_id' => $channelId,
             ]);
@@ -43,14 +46,14 @@ class LockActionsToChannelUsers
                     ->row([
                         Keyboard::inlineButton([
                             'text' => __('tbe-settings::bot_settings.channel_lock.buttons.join'),
-                            'url' => 'https://t.me/' . $channelId,
-                        ])
+                            'url' => 'https://t.me/'.$channelId,
+                        ]),
                     ])
                     ->row([
                         Keyboard::inlineButton([
                             'text' => __('tbe-settings::bot_settings.channel_lock.buttons.confirm'),
                             'callback_data' => encodeCallback(ChannelLockQuery::TYPE, 'checkMembership'),
-                        ])
+                        ]),
                     ])
             ));
     }

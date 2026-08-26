@@ -83,7 +83,7 @@ class Settings
         $setting = $this->settings->get($key);
 
         if (! $setting) {
-            throw new TbeException('Setting "' . $key . '" not found');
+            throw new TbeException('Setting "'.$key.'" not found');
         }
 
         $rules = [...explode('|', $this->getValidationRuleForType($setting)), ...$setting->getRules()];
@@ -131,7 +131,7 @@ class Settings
 
     private function cacheKey(string $key, Bot $bot): string
     {
-        return 'settings:' . $bot->id . ':' . $key;
+        return 'settings:'.$bot->id.':'.$key;
     }
 
     private function getValidationRuleForType(Setting $setting): string
@@ -146,10 +146,10 @@ class Settings
                 $rules = 'nullable|string';
                 break;
             case SettingType::SELECT:
-                $rules = 'nullable|in:' . implode(',', array_keys($setting->getOptions()));
+                $rules = 'nullable|in:'.implode(',', array_keys($setting->getOptions()));
                 break;
             case SettingType::ENUM:
-                $rules = 'nullable|in:' . implode(',', $setting->getOptions());
+                $rules = 'nullable|in:'.implode(',', $setting->getOptions());
                 break;
             case SettingType::MULTISELECT:
                 $rules = 'nullable|array';
