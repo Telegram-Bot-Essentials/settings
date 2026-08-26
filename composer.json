@@ -3,9 +3,16 @@
     "description": "Settings support built for telegram-bot-essentials/essence",
     "type": "library",
     "require": {
-        "php": "^8.2",
+        "php": "^8.3",
         "laravel/framework": "^12",
         "telegram-bot-essentials/essence": ">=0.9 <1.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0 || ^11.0",
+        "pestphp/pest": "^3.7 || ^4.0",
+        "pestphp/pest-plugin-laravel": "^3.1 || ^4.0"
     },
     "license": "MIT",
     "autoload": {
@@ -15,6 +22,11 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TelegramBotEssentials\\Settings\\Tests\\": "tests/"
+        }
     },
     "authors": [
         {
@@ -38,5 +50,17 @@
         "branch-alias": {
             "dev-chore/locale-lazy-handlers": "0.0.17.x-dev"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "scripts": {
+        "test": "pest",
+        "lint": "pint --test",
+        "format": "pint",
+        "analyse": "phpstan analyse"
     }
 }

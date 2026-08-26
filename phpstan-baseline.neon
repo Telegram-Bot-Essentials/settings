@@ -1,0 +1,445 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: database/migrations/2026_06_12_120000_migrate_legacy_flat_bot_settings.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:get\(\) expects int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/migrations/2026_06_12_120000_migrate_legacy_flat_bot_settings.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Illuminate\\Support\\Collection\<\(int\|string\),mixed\>\:\:has\(\) expects array\<\(int\|string\)\>\|int\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: database/migrations/2026_06_12_120000_migrate_legacy_flat_bot_settings.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between mixed and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: database/migrations/2026_06_12_120000_migrate_legacy_flat_bot_settings.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:__construct\(\) has parameter \$rules with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:getOptions\(\) should return array\<int\|string, mixed\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:getRules\(\) should return array\<int, mixed\> but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:resolveString\(\) should return string but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:setOptions\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Property TelegramBotEssentials\\Settings\\DTOs\\Setting\:\:\$options type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: src/DTOs/Setting.php
+
+		-
+			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Listeners/LockActionsToChannelUsers.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Models\\BotSetting\:\:bot\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Models/BotSetting.php
+
+		-
+			message: '#^Access to an undefined property TelegramBotEssentials\\Essence\\Models\\BotUser\:\:\$telegram_user_peer_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Services/ChannelMembership.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Services/ChannelMembership.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Services\\LocaleRegistry\:\:cachedStats\(\) should return array\{base\: string, total\: int, locales\: array\<string, array\{translated\: int, total\: int, percent\: int\}\>, computed_at\?\: string\} but returns non\-empty\-array\<mixed, mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Services/LocaleRegistry.php
+
+		-
+			message: '#^Parameter \#1 \$key of static method Illuminate\\Cache\\Repository\:\:get\(\) expects array\|string\|UnitEnum, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/LocaleRegistry.php
+
+		-
+			message: '#^Access to an undefined property TelegramBotEssentials\\Settings\\Models\\BotSetting\:\:\$value\.$#'
+			identifier: property.notFound
+			count: 4
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot access property \$afterSet on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot access property \$beforeSet on mixed\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot access property \$default on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot access property \$type on mixed\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot call method callAfterSet\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot call method callBeforeSet\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot call method getLabel\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Cannot call method getRules\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Services\\Settings\:\:getSetting\(\) should return TelegramBotEssentials\\Settings\\DTOs\\Setting but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Services\\Settings\:\:getSettings\(\) return type with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Services\\Settings\:\:setValueForType\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Only iterables can be unpacked, mixed given\.$#'
+			identifier: arrayUnpacking.nonIterable
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#1 \$setting of method TelegramBotEssentials\\Settings\\Services\\Settings\:\:getValidationRuleForType\(\) expects TelegramBotEssentials\\Settings\\DTOs\\Setting, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#1 \$value of function decrypt expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<int\|string, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#3 \$type of method TelegramBotEssentials\\Settings\\Services\\Settings\:\:setValueForType\(\) expects TelegramBotEssentials\\Settings\\Enums\\SettingType, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Property TelegramBotEssentials\\Settings\\Services\\Settings\:\:\$settings with generic class Illuminate\\Support\\Collection does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Variable \$value might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Services/Settings.php
+
+		-
+			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/TbeSettingsServiceProvider.php
+
+		-
+			message: '#^Cannot access an offset on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
+
+		-
+			message: '#^Cannot access property \$peer_id on Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
+
+		-
+			message: '#^Cannot call method update\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
+
+		-
+			message: '#^Function nextInArray not found\.$#'
+			identifier: function.notFound
+			count: 1
+			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_filter expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
+
+		-
+			message: '#^Cannot access property \$id on Telegram\\Bot\\Objects\\CallbackQuery\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Telegram/CallbackQueries/Member/ChannelLockQuery.php
+
+		-
+			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/CallbackQueries/Member/ChannelLockQuery.php
+
+		-
+			message: '#^Binary operation "\." between ''  \<i\>'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Binary operation "\." between ''\<b\>'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Binary operation "\." between ''\<tg\-spoiler\>'' and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Binary operation "\." between mixed and '' '' results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 2
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Cannot access property \$key on mixed\.$#'
+			identifier: property.nonObject
+			count: 8
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Cannot access property \$type on mixed\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Cannot call method getDescription\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Cannot call method getLabel\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Cannot call method getOptionLabel\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Telegram\\Features\\Admin\\BotSettingsFeature\:\:multiselect\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Telegram\\Features\\Admin\\BotSettingsFeature\:\:renderSettingKey\(\) return type with generic class Telegram\\Bot\\Keyboard\\Button does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Method TelegramBotEssentials\\Settings\\Telegram\\Features\\Admin\\BotSettingsFeature\:\:renderSettingKey\(\) should return Telegram\\Bot\\Keyboard\\Button\|null but returns array\|string\|Telegram\\Bot\\Keyboard\\Button\.$#'
+			identifier: return.type
+			count: 3
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<Telegram\\Bot\\Keyboard\\Button\>\) to function array_filter does not contain falsy values, the array will always stay the same\.$#'
+			identifier: arrayFilter.same
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Parameter \#1 \$key of method TelegramBotEssentials\\Settings\\Services\\Settings\:\:get\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 7
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Parameter \#1 \$setting of static method TelegramBotEssentials\\Settings\\Telegram\\Features\\Admin\\BotSettingsFeature\:\:renderSettingKey\(\) expects TelegramBotEssentials\\Settings\\DTOs\\Setting, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/Features/Admin/BotSettingsFeature.php
+
+		-
+			message: '#^Cannot access property \$peer_id on Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Telegram/StateAnswers/Admin/BotSettingsAnswer.php
+
+		-
+			message: '#^Cannot access property \$text on Telegram\\Bot\\Objects\\Message\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Telegram/StateAnswers/Admin/BotSettingsAnswer.php
+
+		-
+			message: '#^Parameter \#1 \$key of method TelegramBotEssentials\\Settings\\Services\\Settings\:\:set\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/StateAnswers/Admin/BotSettingsAnswer.php
+
+		-
+			message: '#^Parameter \#1 \$key of method TelegramBotEssentials\\Settings\\Telegram\\StateAnswers\\Admin\\BotSettingsAnswer\:\:extractDepthFromKey\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Telegram/StateAnswers/Admin/BotSettingsAnswer.php
