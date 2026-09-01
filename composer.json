@@ -1,11 +1,11 @@
 {
     "name": "telegram-bot-essentials/settings",
-    "description": "Settings support built for telegram-bot-essentials/essence",
+    "description": "Per-bot typed key/value settings for telegram-bot-essentials/essence",
     "type": "library",
     "require": {
         "php": "^8.3",
-        "laravel/framework": "^12",
-        "telegram-bot-essentials/essence": "0.12.x-dev"
+        "laravel/framework": "^12 || ^13",
+        "telegram-bot-essentials/essence": "^0.12"
     },
     "require-dev": {
         "larastan/larastan": "^3.0",
@@ -49,9 +49,6 @@
             "providers": [
                 "TelegramBotEssentials\\Settings\\TbeSettingsServiceProvider"
             ]
-        },
-        "branch-alias": {
-            "dev-chore/locale-lazy-handlers": "0.0.17.x-dev"
         }
     },
     "config": {
