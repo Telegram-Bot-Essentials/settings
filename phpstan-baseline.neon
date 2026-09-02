@@ -276,11 +276,6 @@ parameters:
 			count: 1
 			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
 
-		-
-			message: '#^Function nextInArray not found\.$#'
-			identifier: function.notFound
-			count: 1
-			path: src/Telegram/CallbackQueries/Admin/BotSettingsQuery.php
 
 		-
 			message: '#^Parameter \#1 \$array of function array_filter expects array, mixed given\.$#'
