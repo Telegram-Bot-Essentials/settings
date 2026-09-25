@@ -121,12 +121,6 @@ parameters:
 			path: src/Services/LocaleRegistry.php
 
 		-
-			message: '#^Access to an undefined property TelegramBotEssentials\\Settings\\Models\\BotSetting\:\:\$value\.$#'
-			identifier: property.notFound
-			count: 4
-			path: src/Services/Settings.php
-
-		-
 			message: '#^Cannot access property \$afterSet on mixed\.$#'
 			identifier: property.nonObject
 			count: 1
@@ -205,12 +199,6 @@ parameters:
 			path: src/Services/Settings.php
 
 		-
-			message: '#^Parameter \#1 \$value of function decrypt expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Services/Settings.php
-
-		-
 			message: '#^Parameter \#2 \$array of function implode expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -218,12 +206,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<int\|string, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Services/Settings.php
-
-		-
-			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Services/Settings.php

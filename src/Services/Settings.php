@@ -2,6 +2,7 @@
 
 namespace TelegramBotEssentials\Settings\Services;
 
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -61,7 +62,8 @@ class Settings
                     $value = $botSetting->value;
                     break;
                 case SettingType::SENSITIVE:
-                    $value = $botSetting->value == null ? null : decrypt($botSetting->value);
+                    $stored = $botSetting->value;
+                    $value = $stored === null || $stored === '' ? null : $this->decryptSensitive($botSetting, $stored);
                     break;
                 case SettingType::MULTISELECT:
                     $value = $botSetting->value == null ? ($setting->default ?? []) : explode(',', $botSetting->value);
@@ -131,7 +133,12 @@ class Settings
 
     private function cacheKey(string $key, Bot $bot): string
     {
-        return 'settings:'.$bot->id.':'.$key;
+        return $this->cacheKeyFor($key, $bot->id);
+    }
+
+    private function cacheKeyFor(string $key, int|string $botId): string
+    {
+        return 'settings:'.$botId.':'.$key;
     }
 
     private function getValidationRuleForType(Setting $setting): string
@@ -160,6 +167,92 @@ class Settings
         }
 
         return $rules;
+    }
+
+    /**
+     * Encrypts, in place, every sensitive setting that is still stored as plain text (saved before
+     * the key became sensitive) and returns how many it fixed. Values that are already encrypted,
+     * empty, or encrypted with another app key are left alone, so it is safe to run repeatedly.
+     */
+    public function encryptPlainSensitiveValues(): int
+    {
+        $keys = [];
+        foreach ($this->settings as $key => $setting) {
+            if ($setting instanceof Setting && $setting->type === SettingType::SENSITIVE) {
+                $keys[] = (string) $key;
+            }
+        }
+
+        $fixed = 0;
+
+        BotSetting::query()
+            ->withoutGlobalScopes()
+            ->whereIn('key', $keys)
+            ->whereNotNull('value')
+            ->where('value', '!=', '')
+            ->each(function (BotSetting $botSetting) use (&$fixed) {
+                if ($this->encryptIfPlain($botSetting)) {
+                    $fixed++;
+                    Cache::forget($this->cacheKeyFor($botSetting->key, $botSetting->bot_id));
+                }
+            });
+
+        return $fixed;
+    }
+
+    /**
+     * Sensitive values are stored encrypted, but one saved before its key became sensitive is
+     * plain text. Reading such a value returns it and encrypts it in place, so a stale row heals
+     * itself instead of breaking every screen that reads it. A value that has the shape of an
+     * encrypted payload yet cannot be opened (another app key) is a real error and is rethrown.
+     */
+    private function decryptSensitive(BotSetting $botSetting, string $stored): mixed
+    {
+        try {
+            return decrypt($stored);
+        } catch (DecryptException $e) {
+            if ($this->looksEncrypted($stored)) {
+                throw $e;
+            }
+
+            $this->encryptIfPlain($botSetting);
+
+            return $stored;
+        }
+    }
+
+    private function encryptIfPlain(BotSetting $botSetting): bool
+    {
+        $value = $botSetting->value;
+        if ($value === null || $value === '') {
+            return false;
+        }
+
+        try {
+            decrypt($value);
+
+            return false;
+        } catch (DecryptException) {
+            if ($this->looksEncrypted($value)) {
+                return false;
+            }
+        }
+
+        $botSetting->update(['value' => encrypt($value)]);
+
+        tbeLog('settings')->warning('Encrypted a sensitive setting that was stored as plain text', [
+            'key' => $botSetting->key,
+        ]);
+
+        return true;
+    }
+
+    /** Whether the stored text has the shape of a Laravel encrypted payload (base64 of iv/value/mac JSON). */
+    private function looksEncrypted(string $value): bool
+    {
+        $payload = json_decode((string) base64_decode($value, true), true);
+
+        return is_array($payload) && isset($payload['iv'], $payload['value'], $payload['mac']);
     }
 
     private function setValueForType(BotSetting $botSetting, mixed $data, SettingType $type)

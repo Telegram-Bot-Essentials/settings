@@ -6,6 +6,18 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- Reading a sensitive setting that was saved as plain text (before its key
+  became sensitive) threw `The payload is invalid` and broke every screen that
+  read it, e.g. a payment gateway's merchant id. Such a value is now returned
+  and encrypted in place on first read. A value that looks encrypted but cannot
+  be opened (another app key) is still reported, never rewritten.
+- New `Settings::encryptPlainSensitiveValues()` and a migration that runs it
+  encrypt all existing plain-text sensitive values up front, so none is left
+  unencrypted until someone happens to read it. Safe to run repeatedly.
+- `BotSetting` declares its `bot_id`, `key` and `value` properties.
+
 ## [0.0.19] - 2026-09-22
 
 ### Changed
