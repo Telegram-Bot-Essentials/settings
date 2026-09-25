@@ -6,6 +6,8 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+## [0.0.20] - 2026-09-25
+
 ### Fixed
 
 - Reading a sensitive setting that was saved as plain text (before its key
