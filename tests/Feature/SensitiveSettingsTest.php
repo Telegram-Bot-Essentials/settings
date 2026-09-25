@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Encryption\Encrypter;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Services\Settings;
@@ -83,4 +84,12 @@ it('runs the bulk fix from its migration', function () {
     (require dirname(__DIR__, 2).'/database/migrations/2026_09_26_000000_encrypt_plain_sensitive_bot_settings.php')->up();
 
     expect(storedValue($this->bot->id, 'gateway.secret'))->not->toContain('legacy-plain');
+});
+
+it('does nothing when the settings table does not exist yet', function () {
+    Schema::drop('bot_settings');
+
+    (require dirname(__DIR__, 2).'/database/migrations/2026_09_26_000000_encrypt_plain_sensitive_bot_settings.php')->up();
+
+    expect(Schema::hasTable('bot_settings'))->toBeFalse();
 });
