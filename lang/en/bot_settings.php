@@ -42,6 +42,10 @@ return [
             'bot_not_admin' => 'The bot is not an admin of that channel. Please add the bot as an admin first, then try again.',
         ],
         'prompt' => '⛔️ Dear user, you have not joined the channel. Please join to continue',
+        'alerts' => [
+            'no_channel' => "Channel lock is on, but no channel is set, so nobody is being asked to join.\nSet the channel in Bot Settings → Channel lock, or turn the lock off.",
+            'check_failed' => "Channel lock can't check whether users joined :channel, so everyone is let through for now.\nMake sure the bot is still an admin of the channel.\n\nTelegram said: :error",
+        ],
         'buttons' => [
             'join' => 'Join channel ✅',
             'confirm' => 'I joined ❗️',
