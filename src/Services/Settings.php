@@ -110,7 +110,7 @@ class Settings
 
         Cache::forget($this->cacheKey($key, $bot));
 
-        tbeLog('settings')->info('Bot setting updated', [
+        tbeLog('settings')->audit('Bot setting "'.$key.'" updated', [
             'key' => $key,
             'value' => $setting->type === SettingType::SENSITIVE
                 ? '[redacted]'
