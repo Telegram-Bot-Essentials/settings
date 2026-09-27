@@ -6,6 +6,20 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+### Changed
+
+- Requires essence `^0.15` for `adminAlert()` and `tbeLog()->audit()`.
+- Channel lock fails open: when the bot cannot check membership (removed from
+  the channel, no longer an admin, channel gone) members are let through
+  instead of every one of them being locked out, and the owner and admins get
+  a throttled alert with Telegram's error. The lock being on without a
+  channel set alerts them the same way instead of logging a warning on every
+  update.
+- Channel lock no longer logs per update: the skipped / blocked / re-check /
+  confirmed debug and info lines are gone.
+- `Bot setting "<key>" updated` is an audit entry (`tbeLog()->audit()`), so it
+  lands on the audit channel with the key in the message.
+
 ## [0.0.20] - 2026-09-25
 
 ### Fixed
