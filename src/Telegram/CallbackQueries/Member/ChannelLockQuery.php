@@ -24,9 +24,6 @@ class ChannelLockQuery extends CallbackQuery
         $channelId = ltrim(settings()->get('channel_lock.channel_id'), '@');
 
         if (! app(ChannelMembership::class)->isMember($channelId)) {
-            tbeLog('settings')->debug('Channel lock: re-check still not joined', [
-                'channel_id' => $channelId,
-            ]);
             wHook()->api()->answerCallbackQuery([
                 'callback_query_id' => wHook()->update()->callbackQuery->id,
                 'text' => __('tbe-settings::bot_settings.messages.channel_lock.not_joined'),
@@ -35,10 +32,6 @@ class ChannelLockQuery extends CallbackQuery
 
             return;
         }
-
-        tbeLog('settings')->info('Channel lock: membership confirmed', [
-            'channel_id' => $channelId,
-        ]);
 
         MessageMeta::makeWithCurrentMessage()->deleteMessage();
         $this->answer(__('tbe-settings::bot_settings.messages.channel_lock.joined'));
