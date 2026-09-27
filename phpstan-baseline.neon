@@ -85,12 +85,6 @@ parameters:
 			path: src/DTOs/Setting.php
 
 		-
-			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Listeners/LockActionsToChannelUsers.php
-
-		-
 			message: '#^Method TelegramBotEssentials\\Settings\\Models\\BotSetting\:\:bot\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\BelongsTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
 			identifier: missingType.generics
 			count: 1
