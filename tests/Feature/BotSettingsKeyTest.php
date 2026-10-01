@@ -19,7 +19,7 @@ it('opens the settings menu for an admin', function () {
     $this->postWebhookUpdate($bot, $this->makeMessageUpdate('Bot Settings ⚙️', peerId: $peerId))
         ->assertOk();
 
-    $this->assertTelegramSent(fn ($request) => str_contains((string) $request['text'], 'Bot Settings'));
+    $this->assertTelegramSent(fn ($request) => str_contains((string) $request['text'], 'Bot settings'));
 });
 
 it('does not open the settings menu for a member', function () {
