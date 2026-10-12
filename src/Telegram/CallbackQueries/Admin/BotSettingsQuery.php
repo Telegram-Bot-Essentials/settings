@@ -3,7 +3,6 @@
 namespace TelegramBotEssentials\Settings\Telegram\CallbackQueries\Admin;
 
 use Illuminate\Support\Facades\App;
-use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Models\MessageMeta;
 use TelegramBotEssentials\Essence\Telegram\CallbackQueries\CallbackQuery;
 use TelegramBotEssentials\Settings\Enums\SettingType;
@@ -13,7 +12,7 @@ class BotSettingsQuery extends CallbackQuery
 {
     protected string $type = 'BTSTNG';
 
-    protected int $perm = Roles::ADMIN->value;
+    protected ?string $permission = 'settings.manage';
 
     public function menu(?string $depth = null): void
     {
@@ -41,7 +40,7 @@ class BotSettingsQuery extends CallbackQuery
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
                     'text' => $text,
                     'parse_mode' => 'HTML',
-                    'reply_markup' => wHook()->user()->getKeyboard(),
+                    'reply_markup' => replyKeyboard(),
                 ]);
 
                 return;
