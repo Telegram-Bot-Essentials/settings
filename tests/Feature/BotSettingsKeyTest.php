@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Http;
-use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Settings\Telegram\ReplyKeys\Admin\BotSettingsKey;
 
 // A companion's ReplyKeys are never auto-discovered - the consuming app
@@ -14,7 +13,7 @@ beforeEach(fn () => replyKeyBus()->addReplyKey(BotSettingsKey::class));
 it('opens the settings menu for an admin', function () {
     $bot = $this->makeBot();
     $peerId = 555;
-    $this->makeBotUser($bot, $peerId, ['power' => Roles::ADMIN->value]);
+    $this->grant($this->makeBotUser($bot, $peerId), 'settings.manage');
 
     $this->postWebhookUpdate($bot, $this->makeMessageUpdate('Bot Settings ⚙️', peerId: $peerId))
         ->assertOk();
@@ -25,7 +24,7 @@ it('opens the settings menu for an admin', function () {
 it('does not open the settings menu for a member', function () {
     $bot = $this->makeBot();
     $peerId = 556;
-    $this->makeBotUser($bot, $peerId, ['power' => Roles::MEMBER->value]);
+    $this->makeBotUser($bot, $peerId);
 
     $this->postWebhookUpdate($bot, $this->makeMessageUpdate('Bot Settings ⚙️', peerId: $peerId))
         ->assertOk();
