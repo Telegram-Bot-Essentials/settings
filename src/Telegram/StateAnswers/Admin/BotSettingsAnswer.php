@@ -2,7 +2,6 @@
 
 namespace TelegramBotEssentials\Settings\Telegram\StateAnswers\Admin;
 
-use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Telegram\StateAnswers\StateAnswer;
 use TelegramBotEssentials\Settings\Enums\SettingType;
 use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
@@ -11,7 +10,7 @@ class BotSettingsAnswer extends StateAnswer
 {
     protected string $type = 'BTSTNG';
 
-    protected int $perm = Roles::ADMIN->value;
+    protected ?string $permission = 'settings.manage';
 
     public function update(string $key): void
     {
@@ -26,7 +25,7 @@ class BotSettingsAnswer extends StateAnswer
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
                     'text' => __('tbe-settings::bot_settings.messages.updated', ['label' => $setting->getLabel()]),
-                    'reply_markup' => wHook()->user()->getKeyboard(),
+                    'reply_markup' => replyKeyboard(),
                 ]);
                 break;
         }
