@@ -31,7 +31,7 @@ class BotSettingsQuery extends CallbackQuery
             case SettingType::SENSITIVE:
             case SettingType::NUMBER:
             case SettingType::TEXT:
-                wHook()->user()->changeState(encodeAnswerState($this->type, 'update', ['key' => $key]));
+                wHook()->conversation()->changeState(encodeAnswerState($this->type, 'update', ['key' => $key]));
                 MessageMeta::makeWithCurrentMessage()->deleteMessage();
                 $text = $setting->getDescription() !== null
                     ? '<i>'.$setting->getDescription().'</i>'."\r\n\r\n".__('tbe-settings::bot_settings.prompts.enter_new_value', ['label' => $setting->getLabel()])
