@@ -3,7 +3,6 @@
 namespace TelegramBotEssentials\Settings\Telegram\CallbackQueries\Member;
 
 use Telegram\Bot\Exceptions\TelegramSDKException;
-use TelegramBotEssentials\Essence\Enums\Roles;
 use TelegramBotEssentials\Essence\Models\MessageMeta;
 use TelegramBotEssentials\Essence\Telegram\CallbackQueries\CallbackQuery;
 use TelegramBotEssentials\Settings\Services\ChannelMembership;
@@ -13,8 +12,6 @@ class ChannelLockQuery extends CallbackQuery
     public const TYPE = 'CHLOCK';
 
     protected string $type = self::TYPE;
-
-    protected int $perm = Roles::MEMBER->value;
 
     /**
      * @throws TelegramSDKException
