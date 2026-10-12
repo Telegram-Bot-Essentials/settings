@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9f94945cfff60a90c61f8461218bada0",
+    "content-hash": "6d9639521d5a21163f0e1806ab7a9470",
     "packages": [
         {
             "name": "brick/math",
@@ -5960,16 +5960,16 @@
         },
         {
             "name": "telegram-bot-essentials/essence",
-            "version": "v0.17.1",
+            "version": "v0.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Telegram-Bot-Essentials/essence.git",
-                "reference": "c0b02ef89462addca37f0bc68f7ecca73a6fe078"
+                "reference": "a9b9e1af1a9e8f97c38e96b09c7a9e8296573b6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Telegram-Bot-Essentials/essence/zipball/c0b02ef89462addca37f0bc68f7ecca73a6fe078",
-                "reference": "c0b02ef89462addca37f0bc68f7ecca73a6fe078",
+                "url": "https://api.github.com/repos/Telegram-Bot-Essentials/essence/zipball/a9b9e1af1a9e8f97c38e96b09c7a9e8296573b6c",
+                "reference": "a9b9e1af1a9e8f97c38e96b09c7a9e8296573b6c",
                 "shasum": ""
             },
             "require": {
@@ -6029,9 +6029,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Telegram-Bot-Essentials/essence/issues",
-                "source": "https://github.com/Telegram-Bot-Essentials/essence/tree/v0.17.1"
+                "source": "https://github.com/Telegram-Bot-Essentials/essence/tree/v0.18.0"
             },
-            "time": "2026-10-12T12:57:16+00:00"
+            "time": "2026-10-12T13:19:43+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
