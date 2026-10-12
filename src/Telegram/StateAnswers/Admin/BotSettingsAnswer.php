@@ -21,7 +21,7 @@ class BotSettingsAnswer extends StateAnswer
             case SettingType::NUMBER:
             case SettingType::TEXT:
                 settings()->set($key, wHook()->update()->message->text);
-                wHook()->user()->changeState();
+                wHook()->conversation()->changeState();
                 wHook()->api()->sendMessage([
                     'chat_id' => wHook()->user()->telegramUser->peer_id,
                     'text' => __('tbe-settings::bot_settings.messages.updated', ['label' => $setting->getLabel()]),
