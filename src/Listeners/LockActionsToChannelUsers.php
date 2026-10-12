@@ -12,7 +12,7 @@ class LockActionsToChannelUsers
 {
     public function handle(BotUpdateReceived $event): void
     {
-        if (hasAccess() || ! settings()->get('channel_lock.status')) {
+        if (hasAccess('settings.manage') || ! settings()->get('channel_lock.status')) {
             return;
         }
 
