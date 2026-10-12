@@ -39,6 +39,8 @@ class TbeSettingsServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'tbe-settings');
 
+        permissionRegistry()->register('settings.manage', fn () => __('tbe-settings::permissions.manage'), 'settings');
+
         // In boot(): every provider's register() runs before any provider's
         // boot(), so this always overrides essence's own register()-phase
         // default binding, regardless of package load order.
