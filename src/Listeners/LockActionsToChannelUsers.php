@@ -19,7 +19,7 @@ class LockActionsToChannelUsers
         $channelId = settings()->get('channel_lock.channel_id');
         $channelId = is_string($channelId) ? ltrim($channelId, '@') : '';
         if (! $channelId) {
-            adminAlert('settings.channel_lock.no_channel', fn () => __('tbe-settings::bot_settings.channel_lock.alerts.no_channel'));
+            ownerAlert('settings.channel_lock.no_channel', fn () => __('tbe-settings::bot_settings.channel_lock.alerts.no_channel'));
 
             return;
         }
