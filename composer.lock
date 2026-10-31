@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "87079ceae96576f0bbc740ee5ef0e26f",
+    "content-hash": "0d6b61e4f21cf105820221fd58dc9a3d",
     "packages": [
         {
             "name": "brick/math",
@@ -6045,16 +6045,16 @@
         },
         {
             "name": "telegram-bot-essentials/essence",
-            "version": "v0.19.0-beta.2",
+            "version": "v0.19.0-beta.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Telegram-Bot-Essentials/essence.git",
-                "reference": "5f22d20f3c16d2782f2d1e0c673a222327b3b4f6"
+                "reference": "b7f24caab8e0439a7962f9c3b5772b0ef93fdf04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Telegram-Bot-Essentials/essence/zipball/5f22d20f3c16d2782f2d1e0c673a222327b3b4f6",
-                "reference": "5f22d20f3c16d2782f2d1e0c673a222327b3b4f6",
+                "url": "https://api.github.com/repos/Telegram-Bot-Essentials/essence/zipball/b7f24caab8e0439a7962f9c3b5772b0ef93fdf04",
+                "reference": "b7f24caab8e0439a7962f9c3b5772b0ef93fdf04",
                 "shasum": ""
             },
             "require": {
@@ -6114,9 +6114,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Telegram-Bot-Essentials/essence/issues",
-                "source": "https://github.com/Telegram-Bot-Essentials/essence/tree/v0.19.0-beta.2"
+                "source": "https://github.com/Telegram-Bot-Essentials/essence/tree/v0.19.0-beta.3"
             },
-            "time": "2026-10-31T10:41:26+00:00"
+            "time": "2026-10-31T13:35:14+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
