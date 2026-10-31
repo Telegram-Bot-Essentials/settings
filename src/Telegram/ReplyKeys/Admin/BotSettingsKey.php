@@ -8,7 +8,7 @@ use TelegramBotEssentials\Settings\Telegram\Features\Admin\BotSettingsFeature;
 
 class BotSettingsKey extends ReplyKey
 {
-    protected ?string $permission = 'settings.manage';
+    protected ?string $ability = 'settings.manage';
 
     protected function text(): string
     {
