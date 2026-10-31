@@ -12,7 +12,7 @@ class BotSettingsQuery extends CallbackQuery
 {
     protected string $type = 'BTSTNG';
 
-    protected ?string $permission = 'settings.manage';
+    protected ?string $ability = 'settings.manage';
 
     public function menu(?string $depth = null): void
     {
