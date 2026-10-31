@@ -28,7 +28,7 @@ class ChannelMembership
                 'user_id' => wHook()->user()->telegram_user_peer_id,
             ]);
         } catch (\Exception $e) {
-            adminAlert('settings.channel_lock.check_failed', fn () => __('tbe-settings::bot_settings.channel_lock.alerts.check_failed', [
+            ownerAlert('settings.channel_lock.check_failed', fn () => __('tbe-settings::bot_settings.channel_lock.alerts.check_failed', [
                 'channel' => '@'.$channelId,
                 'error' => $e->getMessage(),
             ]));
