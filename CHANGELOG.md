@@ -6,6 +6,11 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- The channel lock leaves groups alone. It would have answered every message
+  there from someone outside the channel. The private chat is still locked.
+
 ## [0.0.29] - 2026-11-01
 
 ### Added
