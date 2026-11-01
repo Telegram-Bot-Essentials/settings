@@ -76,3 +76,19 @@ it('alerts the owner when the lock is on without a channel', function () {
     expect(collect(sentTexts())->where('chat_id', (int) $bot->bot_owner_peer_id)->pluck('text')->all())
         ->toBe(['⚠️ '.__('tbe-settings::bot_settings.channel_lock.alerts.no_channel')]);
 });
+
+it('leaves groups alone, and still locks the private chat', function () {
+    config(['tbe-essence.groups.enabled' => true]);
+    $bot = $this->makeBot();
+    lockChannel($bot, 'mychannel');
+    fakeChatMember(['status' => 'left', 'user' => ['id' => 1, 'is_bot' => false, 'first_name' => 'T']]);
+
+    $this->postWebhookUpdate($bot, $this->inGroupChat($this->makeMessageUpdate('hello', 6001), -100222))->assertOk();
+
+    expect(sentTexts())->toBe([]);
+    Http::assertNotSent(fn ($request) => str_contains($request->url(), '/getChatMember'));
+
+    $this->postWebhookUpdate($bot, $this->makeMessageUpdate('hello', 6001))->assertOk();
+
+    expect(array_column(sentTexts(), 'chat_id'))->toContain(6001);
+});
