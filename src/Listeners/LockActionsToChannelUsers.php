@@ -12,6 +12,13 @@ class LockActionsToChannelUsers
 {
     public function handle(BotUpdateReceived $event): void
     {
+        // Only the private chat: in a group this would answer every message
+        // from someone outside the channel. Choosing there is harmless, and
+        // paying happens in private, where the lock still applies.
+        if (wHook()->inGroup()) {
+            return;
+        }
+
         if (hasAccess('settings.manage') || ! settings()->get('channel_lock.status')) {
             return;
         }
