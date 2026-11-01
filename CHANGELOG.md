@@ -6,6 +6,8 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+## [0.0.30] - 2026-11-01
+
 ### Fixed
 
 - The channel lock leaves groups alone. It would have answered every message
