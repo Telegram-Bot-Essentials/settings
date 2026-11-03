@@ -197,7 +197,7 @@ class BotSettingsFeature
 
         $keys = [];
         foreach ($options as $optionKey => $value) {
-            $exist = in_array($value, $currentValue);
+            $exist = in_array((string) $optionKey, array_map('strval', $currentValue), true);
             $keys[] = Keyboard::inlineButton([
                 'text' => $value.' '.($exist ? '✅' : ''),
                 'callback_data' => encodeCallback(self::$type, 'multiSelect', [$setting->key, $optionKey, $exist]),
