@@ -5,12 +5,11 @@ namespace TelegramBotEssentials\Settings;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\ServiceProvider;
 use TelegramBotEssentials\Essence\Contracts\ResolvesBotLocale;
-use TelegramBotEssentials\Essence\Events\BotUpdateReceived;
 use TelegramBotEssentials\Essence\Exceptions\LogicException;
 use TelegramBotEssentials\Essence\Exceptions\TbeLogicException;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
-use TelegramBotEssentials\Settings\Listeners\LockActionsToChannelUsers;
+use TelegramBotEssentials\Settings\Gates\ChannelLockGate;
 use TelegramBotEssentials\Settings\Services\ChannelMembership;
 use TelegramBotEssentials\Settings\Services\LocaleRegistry;
 use TelegramBotEssentials\Settings\Services\Settings;
@@ -44,7 +43,7 @@ class TbeSettingsServiceProvider extends ServiceProvider
         // default binding, regardless of package load order.
         $this->app->bind(ResolvesBotLocale::class, TbeSettingsBotLocaleResolver::class);
 
-        botEventBus()->listen(BotUpdateReceived::class, LockActionsToChannelUsers::class);
+        handlerGates()->add(ChannelLockGate::class);
 
         callbackQueryBus()->addCallbackQueries([
             BotSettingsQuery::class,
