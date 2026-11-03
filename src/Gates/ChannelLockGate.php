@@ -6,6 +6,7 @@ use Telegram\Bot\Keyboard\Keyboard;
 use TelegramBotEssentials\Essence\Contracts\HandlerGate;
 use TelegramBotEssentials\Essence\Telegram\Commands\Command;
 use TelegramBotEssentials\Essence\Telegram\TelegramResponse;
+use TelegramBotEssentials\Settings\Contracts\IgnoresChannelLock;
 use TelegramBotEssentials\Settings\Services\ChannelMembership;
 use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Member\ChannelLockQuery;
 
@@ -59,6 +60,7 @@ class ChannelLockGate implements HandlerGate
     private function isExempt(object $handler): bool
     {
         return $handler instanceof ChannelLockQuery
+            || $handler instanceof IgnoresChannelLock
             || ($handler instanceof Command && $handler->getName() === 'start')
             // Only the private chat: in a group this would answer everyone
             // outside the channel. Choosing there is harmless, and paying
