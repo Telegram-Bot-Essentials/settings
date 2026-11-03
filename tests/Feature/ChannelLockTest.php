@@ -10,6 +10,7 @@ use TelegramBotEssentials\Essence\Events\BotDeepLinkReceived;
 use TelegramBotEssentials\Essence\Models\Bot;
 use TelegramBotEssentials\Essence\Telegram\CallbackQueries\CallbackQuery;
 use TelegramBotEssentials\Essence\Telegram\Commands\Command;
+use TelegramBotEssentials\Settings\Contracts\IgnoresChannelLock;
 use TelegramBotEssentials\Settings\Models\BotSetting;
 use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Member\ChannelLockQuery;
 
@@ -188,6 +189,29 @@ it('answers a locked button with a new message, leaving the one it sits on', fun
 class LockTestPressQuery extends CallbackQuery
 {
     protected string $type = 'LOCK_PRESS';
+
+    public function press(): void
+    {
+        wHook()->api()->sendMessage([...wHook()->replyTo(), 'text' => 'pressed']);
+    }
+}
+
+it('lets a handler marked as ignoring the lock through', function () {
+    callbackQueryBus()->addCallbackQueries([LockTestIgnoringQuery::class]);
+    $bot = $this->makeBot();
+    lockChannel($bot, 'mychannel');
+    fakeChatMember(outsider());
+
+    $this->postWebhookUpdate($bot, $this->makeCallbackQueryUpdate(encodeCallback('LOCK_IGNORING', 'press'), 6106))->assertOk();
+
+    expect(collect(sentTexts())->pluck('text'))
+        ->toContain('pressed')
+        ->not->toContain(__('tbe-settings::bot_settings.channel_lock.prompt'));
+});
+
+class LockTestIgnoringQuery extends CallbackQuery implements IgnoresChannelLock
+{
+    protected string $type = 'LOCK_IGNORING';
 
     public function press(): void
     {
