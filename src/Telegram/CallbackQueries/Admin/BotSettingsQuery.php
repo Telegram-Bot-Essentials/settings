@@ -79,10 +79,11 @@ class BotSettingsQuery extends CallbackQuery
     {
         $setting = settings()->getSetting($key);
         $result = settings()->get($key);
+        // The key, not the label: labels change with the language or a rename.
         if ($remove) {
-            $result = array_filter($result, fn ($value) => $value != ($setting->getOptions()[$optionKey] ?? null));
+            $result = array_values(array_filter($result, fn ($value) => (string) $value !== $optionKey));
         } else {
-            $result[] = $setting->getOptions()[$optionKey] ?? null;
+            $result[] = $optionKey;
         }
         settings()->set($key, $result);
         BotSettingsFeature::multiselect($setting)->update();
