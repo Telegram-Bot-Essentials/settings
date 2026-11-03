@@ -6,6 +6,15 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+### Changed
+
+- The channel lock only refuses what a member asks of the bot: reply keys,
+  button presses, form answers, commands, text matchers and inline queries.
+  `/start` and its deep links run before joining, so a referral or a campaign
+  prize is no longer lost to someone joining second, and blocking the bot is
+  recorded as usual. The prompt is a new message, so it no longer replaces a
+  prize message the member still needs. Needs essence with `HandlerGate`.
+
 ## [0.0.30] - 2026-11-01
 
 ### Fixed
