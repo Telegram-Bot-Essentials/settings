@@ -6,6 +6,11 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+### Added
+
+- `IgnoresChannelLock`: a handler implementing it runs for members outside the
+  locked channel, for what they should reach regardless, such as support.
+
 ## [0.0.32] - 2026-11-03
 
 ### Fixed
