@@ -6,6 +6,12 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+### Fixed
+
+- A `MULTISELECT` setting stores its option keys, like `SELECT` does. It stored the
+  labels, so a rename or another language lost the choice, and a comma in a label
+  split it in two.
+
 ## [0.0.31] - 2026-11-03
 
 ### Changed
