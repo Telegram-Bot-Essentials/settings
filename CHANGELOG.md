@@ -6,6 +6,8 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+## [0.0.32] - 2026-11-03
+
 ### Fixed
 
 - A `MULTISELECT` setting stores its option keys, like `SELECT` does. It stored the
