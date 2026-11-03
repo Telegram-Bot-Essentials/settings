@@ -6,6 +6,8 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+## [0.0.31] - 2026-11-03
+
 ### Changed
 
 - The channel lock only refuses what a member asks of the bot: reply keys,
