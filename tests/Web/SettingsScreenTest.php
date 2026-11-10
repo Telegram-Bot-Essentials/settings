@@ -84,6 +84,14 @@ it('refuses a value the setting\'s rules refuse, saving the rest', function () {
         ->and((string) settings()->get('shop.limit', $this->bot))->toBe('5');
 });
 
+it('keeps only offered options in a multi-select', function () {
+    $this->enterPanel('manage', $this->bot, $this->account);
+
+    Livewire::test(BotSettingsPage::class)->fillForm(['shop__tags' => ['a', 'forged,value']])->call('save');
+
+    expect(settings()->get('shop.tags', $this->bot))->toBe(['a']);
+});
+
 it('replaces a secret only when a new one is typed', function () {
     settings()->set('shop.api_key', 'old-secret', $this->bot);
     $this->enterPanel('manage', $this->bot, $this->account);
