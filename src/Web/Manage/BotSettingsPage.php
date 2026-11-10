@@ -208,7 +208,11 @@ class BotSettingsPage extends PanelPage
     {
         return match ($setting->type) {
             SettingType::CHECKBOX => (bool) $value,
-            SettingType::MULTISELECT => is_array($value) ? array_values($value) : [],
+            // Only offered keys: the list is stored comma-joined, and its rule checks just "array".
+            SettingType::MULTISELECT => array_values(array_intersect(
+                array_map(fn (mixed $v): string => is_scalar($v) ? (string) $v : '', is_array($value) ? $value : []),
+                array_keys(self::selectOptions($setting)),
+            )),
             default => $value === '' ? null : $value,
         };
     }
