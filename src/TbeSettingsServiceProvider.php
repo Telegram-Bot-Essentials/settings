@@ -17,12 +17,16 @@ use TelegramBotEssentials\Settings\Support\TbeSettingsBotLocaleResolver;
 use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Admin\BotSettingsQuery;
 use TelegramBotEssentials\Settings\Telegram\CallbackQueries\Member\ChannelLockQuery;
 use TelegramBotEssentials\Settings\Telegram\StateAnswers\Admin\BotSettingsAnswer;
+use TelegramBotEssentials\Settings\Web\SettingsManagePlugin;
 
 class TbeSettingsServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         $this->app->singleton(Settings::class, fn () => new Settings);
+
+        // Class names only: Filament is loaded only where the app installed it.
+        webPanels()->manage(SettingsManagePlugin::class);
         $this->app->singleton(LocaleRegistry::class);
         $this->app->singleton(ChannelMembership::class);
     }
