@@ -6,6 +6,21 @@ stabilizes at 1.0 a `0.0.x` bump may carry breaking changes.
 
 ## [Unreleased]
 
+## [0.0.34] - 2026-11-11
+
+### Added
+
+- Translate the settings page to english.
+- Translate the settings page to persian.
+- Register the settings panel plugin.
+- Add the settings panel plugin.
+- Edit every bot setting on one page.
+- Place the settings page under the Bot group.
+
+### Fixed
+
+- Keep only offered options in a multi-select.
+
 ## [0.0.33] - 2026-11-03
 
 ### Added
