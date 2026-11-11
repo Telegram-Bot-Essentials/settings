@@ -18,9 +18,11 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Validation\ValidationException;
 use TelegramBotEssentials\Essence\Exceptions\TbeLogicException;
+use TelegramBotEssentials\Essence\Web\Filament\PanelGroup;
 use TelegramBotEssentials\Essence\Web\Filament\PanelPage;
 use TelegramBotEssentials\Settings\DTOs\Setting;
 use TelegramBotEssentials\Settings\Enums\SettingType;
+use UnitEnum;
 
 /**
  * Every registered bot setting on one page, grouped by its directories, as
@@ -37,6 +39,8 @@ class BotSettingsPage extends PanelPage
     protected static ?string $slug = 'settings';
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCog6Tooth;
+
+    protected static string|UnitEnum|null $navigationGroup = PanelGroup::Bot;
 
     protected static ?int $navigationSort = 90;
 
